@@ -14,7 +14,6 @@
 #include <X11/keysym.h>
 #include "div.h"
 #include "x.h"
-#include "config.h"
 
 xcb_connection_t* dis;
 Display* dpy;
@@ -135,7 +134,7 @@ bool processQueuedXEvents() {
 
 void onKeyPress() {
     xcb_keycode_t detail = ((xcb_key_press_event_t*)event)->detail;
-    uint8_t mod = ((xcb_key_press_event_t*)event)->state & ~IGNORE_MASK;
+    uint8_t mod = ((xcb_key_press_event_t*)event)->state & ~state.ignore_mask;
     for (int i = 0; bindings[i].func; i++) {
         if(bindings[i].keycode == detail && bindings[i].mod == mod) {
             bindings[i].func(bindings[i].arg);

@@ -1,4 +1,3 @@
-#include "config.h"
 #include "div.h"
 #include "functions.h"
 #include "x.h"
@@ -8,6 +7,7 @@
 
 State state = {
     .num_active_images = 2,
+    .ignore_mask = Mod2Mask | LockMask,
     .xevent_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_STRUCTURE_NOTIFY,
     .right_to_left = 1,
 };

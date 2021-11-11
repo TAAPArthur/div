@@ -84,6 +84,7 @@ typedef struct {
     float zoom;
     bool right_to_left;
 
+    uint16_t ignore_mask;
     uint32_t xevent_mask;
     uint32_t background_color;
     const char* name;
