@@ -141,7 +141,7 @@ void img_render(ImageHolder*holder, int num, uint32_t wid, uint32_t win_width, u
     uint32_t effective_width;
     uint32_t effective_height;
     for (int r = 0, i = 0; r < getRows(); r++) {
-        int x = startingX;
+        int x = state.right_to_left ? win_width - startingX : startingX;
         for (int c = 0; c < getCols() && i < num; c++, i++) {
             if(!holder[i].image_data)
                 continue;
@@ -153,8 +153,8 @@ void img_render(ImageHolder*holder, int num, uint32_t wid, uint32_t win_width, u
             printf("%s, %d Window %d %d Image %d %d Effective %d %d %f %d\n",holder[i].path, i, win_width, win_height, holder[i].image_width, holder[i].image_height, effective_width ,effective_height , zoom, state.scale_mode);
 
             imlib_render_image_part_on_drawable_at_size(holder[i].offset_x, holder[i].offset_y,
-                    holder[i].image_width/zoom , holder[i].image_height/zoom, x, y, effective_width, effective_height);
-            x+=effective_width + holder[i].padding_x;
+                    holder[i].image_width/zoom , holder[i].image_height/zoom, x - (state.right_to_left? effective_width: 0), y, effective_width, effective_height);
+            x+=(effective_width + holder[i].padding_x) * (state.right_to_left?-1:1);
         }
         y += effective_height;
     }

@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 
 #define LEN(A) (sizeof(A)/sizeof(A[0]))
@@ -81,6 +82,7 @@ typedef struct {
     AlignMode align_mode_x;
     AlignMode align_mode_y;
     float zoom;
+    bool right_to_left;
 
     uint32_t xevent_mask;
     uint32_t background_color;
