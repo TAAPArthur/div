@@ -4,30 +4,14 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-
-Imlib_Image _img_open(const char*fileName)
+int img_load(ImageHolder* holder, const char* path)
 {
-    if(!fileName) {
-        return NULL;
+    if(holder->image_data) {
+        imlib_context_set_image(holder->image_data);
+        imlib_free_image();
     }
-    printf("%s opening\n", fileName);
-	Imlib_Image im = imlib_load_image(fileName);
-    /*
-    if (im != NULL) {
-        imlib_context_set_image(im);
-        if (imlib_image_get_data_for_reading_only() == NULL) {
-            imlib_free_image();
-            im = NULL;
-        }
-    }
-    */
-	return im;
-}
 
-int img_open(ImageHolder* holder, const char* path)
-{
-
-	if ((holder->image_data = _img_open(path)) == NULL) {
+	if ((holder->image_data = path ? imlib_load_image(path) : NULL) == NULL) {
 		return 0;
     }
     holder->path = path;
@@ -37,12 +21,6 @@ int img_open(ImageHolder* holder, const char* path)
     holder->image_width = imlib_image_get_width();
     holder->image_height = imlib_image_get_height();
 	return 1;
-}
-
-void img_close(ImageHolder* holder) {
-    imlib_context_set_image(holder->image_data);
-    imlib_free_image();
-    holder->image_data = NULL;
 }
 
 float get_img_zoom(ImageHolder*holder, uint32_t win_width, uint32_t win_height, ScaleMode scale_mode) {

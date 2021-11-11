@@ -5,7 +5,7 @@
 
 void open_images() {
     for (int i = 0; i < state.num_active_images; i++) {
-        img_open(image_holders + i, getFilePath(state.file_index + i));
+        img_load(image_holders + i, getFilePath(state.file_index + i));
     }
 }
 
@@ -29,6 +29,7 @@ void jump_end() {
     state.file_index = state.file_index - state.num_active_images;
     open_images();
 }
+
 void toggle_multi_page(int arg) {
     state.num_active_images = state.num_active_images == arg ? 1 : arg;
 }
