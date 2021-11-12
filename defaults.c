@@ -10,6 +10,7 @@ State state = {
     .ignore_mask = Mod2Mask | LockMask,
     .xevent_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY,
     .right_to_left = 0,
+    .scale_mode = SCALE_HEIGHT,
 };
 
 void onStartup();
@@ -26,7 +27,7 @@ void (*events[LAST_EVENT])() = {
 };
 
 Binding bindings[] = {
-    {0, XK_q, exit, 1},
+    {0, XK_q, exit, 0},
     {0, XK_f, cycleScaleMode, 1},
     {ShiftMask, XK_f, cycleScaleMode, -1},
     {0, XK_semicolon, cycleAlignment, 1},
