@@ -12,10 +12,13 @@ State state = {
     .right_to_left = 1,
 };
 
+void onStartup();
 
 void (*events[LAST_EVENT])() = {
     [XCB_KEY_PRESS] = onKeyPress,
     [XCB_CONFIGURE_NOTIFY] = onConfigureEvent,
+
+    [ON_STARTUP] = onStartup,
 
     [PROCESS_ARGS] = parse_options,
     [POST_XCONNECTION] = initlizeBindings,

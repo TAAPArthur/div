@@ -10,7 +10,7 @@ $(BIN).a: $(OBJS)
 	ar rcs $@ $^
 
 $(BIN): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(CC) $(LDFLAGS) -o $@ $^ samples/no_op.c $(LDLIBS)
 
 $(BIN).sh: $(BIN).sh.template
 	sed "s/__$(BIN)_libs__/$(LDLIBS)/g" $^ > $@
