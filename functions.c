@@ -6,20 +6,20 @@
 #define TOGGLE(A,B, D) A = (A==B ? D : B)
 
 void open_images() {
-    for (int i = 0; i < state.num_active_images; i++) {
+    for (int i = 0; i < getNumActiveImages(); i++) {
         img_load(image_holders + i, getFilePath(state.file_index + i));
     }
 }
 
 void next_image(int arg) {
-    if(state.file_index + arg < state.num_files && state.file_index + arg + state.num_active_images > 0) {
+    if(state.file_index + arg < state.num_files && state.file_index + arg + getNumActiveImages() > 0) {
         state.file_index += arg;
         open_images();
     }
 }
 
 void next_page(int arg) {
-    next_image(arg * state.num_active_images);
+    next_image(arg * getNumActiveImages());
 }
 
 void jump_start() {
@@ -28,12 +28,12 @@ void jump_start() {
 }
 
 void jump_end() {
-    state.file_index = state.file_index - state.num_active_images;
+    state.file_index = state.file_index - getNumActiveImages();
     open_images();
 }
 
 void toggle_multi_page(int arg) {
-    state.num_active_images = state.num_active_images == arg ? 1 : arg;
+    TOGGLE(state.num_active_images, arg, 1);
 }
 
 void cycleAlignment(int delta) {
@@ -70,5 +70,4 @@ void toggle_right_to_left(){
 void toggle_grid(int arg){
     TOGGLE(state.rows,arg, 0);
     TOGGLE(state.cols,arg, 0);
-    state.num_active_images = state.cols * state.rows;
 }

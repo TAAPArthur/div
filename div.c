@@ -78,7 +78,7 @@ void maybe_render() {
 }
 void render() {
     clear_drawable(state.drawable, state.win_width, state.win_height);
-    img_render(image_holders, state.num_active_images, state.drawable, state.win_width, state.win_height);
+    img_render(image_holders, getNumActiveImages(), state.drawable, state.win_width, state.win_height);
     clear_window(state.wid, state.win_width, state.win_height);
     state.dirty = 0;
 }

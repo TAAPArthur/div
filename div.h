@@ -110,6 +110,10 @@ void removeExtraEvent(int index);
 
 extern ImageHolder image_holders[];
 extern State state;
+
+static inline int getNumActiveImages() {
+    return state.rows && state.cols ? state.rows * state.cols : state.num_active_images;
+}
 static inline int getRows() {
     return state.rows ? state.rows : state.cols ? (state.num_active_images + state.cols -1 ) / state.cols : 1;
 }
