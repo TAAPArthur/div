@@ -17,6 +17,7 @@
 
 xcb_connection_t* dis;
 Display* dpy;
+xcb_gcontext_t gc;
 
 xcb_atom_t pid_atom;
 xcb_atom_t wm_name_atom;
@@ -37,9 +38,19 @@ xcb_window_t createWindow(xcb_connection_t* dis, xcb_window_t parent) {
     xcb_screen_t* screen = iter.data;
 
     xcb_window_t win = xcb_generate_id(dis);
-    uint32_t values [] = {state.background_color, state.xevent_mask};
+
+    xcb_window_t pid = xcb_generate_id (dis);
+    state.drawable =pid;
+    xcb_create_pixmap(dis, screen->root_depth, pid, screen->root, 5000, 5000);
+
+    gc = xcb_generate_id (dis);
+
+    uint32_t gc_values [] = {state.background_color};
+    xcb_create_gc (dis, gc, screen->root, XCB_GC_BACKGROUND , gc_values);
+
+    uint32_t values [] = {pid, state.xevent_mask};
     xcb_create_window(dis, XCB_COPY_FROM_PARENT, win, parent? parent: screen->root, 0, 0, GET(state.win_width, 200), GET(state.win_height, 200), 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
- screen->root_visual, XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK, &values);
+ screen->root_visual, XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK, &values);
     return win;
 }
 
@@ -88,15 +99,20 @@ uint32_t setupXConnection() {
     addNewEventFD(xcb_get_file_descriptor(dis), POLLIN, processXEvents);
     xcb_map_window(dis, wid); // TODO move later
 
-	imlib_context_set_display(dpy);
-	imlib_context_set_visual(DefaultVisual(dpy, DefaultScreen(dpy)));
-	imlib_context_set_colormap(DefaultColormap(dpy, DefaultScreen(dpy)));
-    imlib_context_set_drawable(wid);
+    imlib_context_set_display(dpy);
+    imlib_context_set_visual(DefaultVisual(dpy, DefaultScreen(dpy)));
+    imlib_context_set_colormap(DefaultColormap(dpy, DefaultScreen(dpy)));
+    imlib_context_set_drawable(state.drawable);
     return wid;
 }
 
+void clear_drawable(xcb_window_t wid, uint16_t width, uint16_t height) {
+    xcb_rectangle_t rect = {0,0,width, height};
+    xcb_poly_fill_rectangle(dis, wid, gc, 1, &rect);
+}
 void clear_window(xcb_window_t wid, uint16_t width, uint16_t height) {
     xcb_clear_area(dis, 0, wid, 0, 0, width,  height);
+    xcb_flush(dis);
 }
 
 void initlizeBindings() {

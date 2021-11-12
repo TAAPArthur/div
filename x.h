@@ -7,6 +7,7 @@
 uint32_t setupXConnection();
 
 void clear_window(uint32_t wid, uint16_t width, uint16_t height);
+void clear_drawable(uint32_t wid, uint16_t width, uint16_t height);
 void processXEvents() ;
 bool processQueuedXEvents();
 
