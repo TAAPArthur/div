@@ -92,6 +92,7 @@ void openXConnection() {
     wm_name_atom = get_atom(dis, "_NET_WM_NAME");
     utf8_string_atom = get_atom(dis, "UTF8_STRING");
 }
+
 uint32_t setupXConnection() {
     openXConnection();
     xcb_window_t wid = createWindow(dis, 0);// support embedded
@@ -112,6 +113,8 @@ void clear_drawable(xcb_window_t wid, uint16_t width, uint16_t height) {
 }
 void clear_window(xcb_window_t wid, uint16_t width, uint16_t height) {
     xcb_clear_area(dis, 0, wid, 0, 0, width,  height);
+}
+void flush() {
     xcb_flush(dis);
 }
 
@@ -165,4 +168,9 @@ void onConfigureEvent() {
         state.win_width = configure_event->width;
         state.win_height = configure_event->height;
     }
+}
+
+void setWindowTitle(const char* str) {
+    xcb_change_property(dis, XCB_PROP_MODE_REPLACE, state.wid, wm_name_atom, utf8_string_atom , 8, strlen(str), str);
+    xcb_change_property(dis, XCB_PROP_MODE_REPLACE, state.wid, XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8, strlen(str), str);
 }

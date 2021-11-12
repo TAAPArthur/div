@@ -14,4 +14,8 @@ bool processQueuedXEvents();
 void initlizeBindings();
 void onKeyPress();
 void onConfigureEvent();
+
+void setWindowTitle(const char* str);
+
+void flush();
 #endif

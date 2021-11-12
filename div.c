@@ -56,12 +56,15 @@ int processEvents(int timeout) {
 void doEventLoop() {
     while(eventFDInfo.numberOfFDsToPoll) {
         processEvents(-1);
+        RUN_EVENT(POST_EVENT);
         do
-            RUN_EVENT(POST_EVENT);
+            maybe_render();
         while(processQueuedXEvents());
         state.event_counter++;
+        flush();
     }
 }
+
 
 void maybe_render() {
     static State last_state;
@@ -72,9 +75,11 @@ void maybe_render() {
         last_num_active_images= getNumActiveImages();
     }
     if(diff_num_images || memcmp(&last_state, &state, sizeof(State))) {
-        render();
+        RUN_EVENT(RENDER);
+        RUN_EVENT(SET_TITLE);
         last_state = last_state;
     }
+
 }
 void render() {
     clear_drawable(state.drawable, state.win_width, state.win_height);

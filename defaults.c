@@ -4,6 +4,7 @@
 #include <X11/X.h>
 #include <X11/keysym.h>
 #include <xcb/xcb.h>
+#include <stdio.h>
 
 State state = {
     .num_active_images = 1,
@@ -15,6 +16,15 @@ State state = {
 
 void onStartup();
 
+void default_window_title() {
+    static char buffer[255];
+    if(getNumActiveImages() == 1)
+        snprintf(buffer, sizeof(buffer) -1, "%s %d/%d", image_holders->path, state.file_index + 1, state.num_files);
+    else
+        snprintf(buffer, sizeof(buffer) -1, "%s %d-%d of %d", image_holders->path, state.file_index + 1, state.file_index + 1 + getNumActiveImages() - 1, state.num_files);
+    setWindowTitle(buffer);
+}
+
 void (*events[LAST_EVENT])() = {
     [XCB_KEY_PRESS] = onKeyPress,
     [XCB_CONFIGURE_NOTIFY] = onConfigureEvent,
@@ -23,7 +33,8 @@ void (*events[LAST_EVENT])() = {
 
     [PROCESS_ARGS] = parse_options,
     [POST_XCONNECTION] = initlizeBindings,
-    [POST_EVENT] = maybe_render,
+    [RENDER] = render,
+    [SET_TITLE] = default_window_title,
 };
 
 Binding bindings[] = {

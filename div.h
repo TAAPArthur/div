@@ -32,6 +32,8 @@ enum {
     ON_STARTUP = 32,
     PROCESS_ARGS,
     POST_XCONNECTION,
+    RENDER,
+    SET_TITLE,
     POST_EVENT,
     LAST_EVENT
 };
