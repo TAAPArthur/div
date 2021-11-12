@@ -63,7 +63,7 @@ void setWindowHints(xcb_connection_t* dis, xcb_window_t win) {
 
 void setWindowClass(xcb_connection_t* dis, xcb_window_t win) {
     const char* instance_name = GET(state.name, initial_args[0]);
-    const char* class_name = state.class_name ? state.class_name : NAME;
+    const char* class_name =  CLASSNAME;
     char class_instance[strlen(class_name) + strlen(instance_name) + 2];
     strcpy(class_instance, instance_name);
     strcpy(class_instance + strlen(instance_name) + 1, class_name);

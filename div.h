@@ -13,7 +13,7 @@
 #define MAX_IMAGES 16
 #define GET(V, DEFAULT) (V?V:DEFAULT)
 
-#define NAME "div"
+#define CLASSNAME "div"
 
 #define RUN_EVENT(X, ...) do {if(events[X])events[X](__VA_ARGS__);}while(0)
 typedef struct {
