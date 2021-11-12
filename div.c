@@ -6,10 +6,13 @@
 #include "x.h"
 const char** initial_args;
 int initial_num_args;
+ImageHolder image_holders[MAX_IMAGES];
 
 void parse_options(int argc, const char **argv) {
-    state.file_names = argv + 1;
-    state.num_files= argc - 1;
+    if(argc - 1) {
+        state.file_names = argv + 1;
+        state.num_files= argc - 1;
+    }
 }
 
 struct {
@@ -58,8 +61,6 @@ void doEventLoop() {
         state.event_counter++;
     }
 }
-
-ImageHolder image_holders[MAX_IMAGES];
 
 void render() {
     clear_drawable(state.drawable, state.win_width, state.win_height);

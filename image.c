@@ -99,12 +99,12 @@ void img_render(ImageHolder*holder, int num, uint32_t wid, uint32_t win_width, u
     dw = (win_width - state.padding_x *2) / getCols();
     dh = (win_height- state.padding_y *2) / getRows();
 
-    for (int i = 0; i < getCols(); i++) {
-            total_image_width += get_effective_dim(&holder[i], dw, dh, state.scale_mode, 0) + holder[i].padding_x;
+    for (int i = 0; i < getCols() && i < num; i++) {
+        total_image_width += get_effective_dim(&holder[i], dw, dh, state.scale_mode, 0) + holder[i].padding_x;
     }
 
-    for (int i = 0; i < getRows(); i+=getCols()) {
-            total_image_height += get_effective_dim(&holder[i], dw, dh, state.scale_mode, 1) + holder[i].padding_y;
+    for (int i = 0; i < num; i+=getCols()) {
+        total_image_height += get_effective_dim(&holder[i], dw, dh, state.scale_mode, 1) + holder[i].padding_y;
     }
 
     int startingX = state.padding_x + adjustAlignment(state.align_mode_x, total_image_width, win_width);

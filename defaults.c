@@ -6,10 +6,10 @@
 #include <xcb/xcb.h>
 
 State state = {
-    .num_active_images = 2,
+    .num_active_images = 1,
     .ignore_mask = Mod2Mask | LockMask,
-    .xevent_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_STRUCTURE_NOTIFY,
-    .right_to_left = 1,
+    .xevent_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY,
+    .right_to_left = 0,
 };
 
 void onStartup();
@@ -35,6 +35,9 @@ Binding bindings[] = {
     {ShiftMask, XK_plus, zoom, +2},
     {0, XK_equal, zoom,        0},
     {0, XK_d, toggle_multi_page,        2},
+    {0, XK_t, toggle_multi_page,        16},
+    {0, XK_m, toggle_right_to_left,     },
+    {0, XK_g, toggle_grid,    4 },
 
     {0, XK_j, next_image,  +1},
     {0, XK_k, next_image,  -1},

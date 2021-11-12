@@ -3,6 +3,8 @@
 #include "image.h"
 #include "functions.h"
 
+#define TOGGLE(A,B, D) A = (A==B ? D : B)
+
 void open_images() {
     for (int i = 0; i < state.num_active_images; i++) {
         img_load(image_holders + i, getFilePath(state.file_index + i));
@@ -59,4 +61,14 @@ void zoom(int delta) {
         state.zoom /= -delta;
     else
         state.zoom = 1;
+}
+
+void toggle_right_to_left(){
+    state.right_to_left = !state.right_to_left;
+}
+
+void toggle_grid(int arg){
+    TOGGLE(state.rows,arg, 0);
+    TOGGLE(state.cols,arg, 0);
+    state.num_active_images = state.cols * state.rows;
 }
