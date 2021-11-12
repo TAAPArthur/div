@@ -23,7 +23,7 @@ void (*events[LAST_EVENT])() = {
 
     [PROCESS_ARGS] = parse_options,
     [POST_XCONNECTION] = initlizeBindings,
-    [POST_EVENT] = render,
+    [POST_EVENT] = maybe_render,
 };
 
 Binding bindings[] = {

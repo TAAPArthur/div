@@ -55,6 +55,8 @@ extern void (*events[])();
 void parse_options(int argc, const char **argv);
 void render();
 
+void maybe_render();
+
 typedef struct {
     const char* path;
     int16_t offset_x;
@@ -98,6 +100,7 @@ typedef struct {
     uint16_t win_width;
     uint16_t win_height;
     uint16_t event_counter;
+    bool dirty;
 } State;
 
 

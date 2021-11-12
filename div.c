@@ -1,4 +1,5 @@
 #include <sys/poll.h>
+#include <string.h>
 
 #include "div.h"
 #include "functions.h"
@@ -62,10 +63,24 @@ void doEventLoop() {
     }
 }
 
+void maybe_render() {
+    static State last_state;
+    static uint32_t last_num_active_images;
+    bool diff_num_images = getNumActiveImages() != last_num_active_images;
+    if(diff_num_images) {
+        open_images();
+        last_num_active_images= getNumActiveImages();
+    }
+    if(diff_num_images || memcmp(&last_state, &state, sizeof(State))) {
+        render();
+        last_state = last_state;
+    }
+}
 void render() {
     clear_drawable(state.drawable, state.win_width, state.win_height);
     img_render(image_holders, state.num_active_images, state.drawable, state.win_width, state.win_height);
     clear_window(state.wid, state.win_width, state.win_height);
+    state.dirty = 0;
 }
 
 int main(int argc, const char **argv) {
