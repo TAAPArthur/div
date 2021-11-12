@@ -45,8 +45,8 @@ xcb_window_t createWindow(xcb_connection_t* dis, xcb_window_t parent) {
 
     gc = xcb_generate_id (dis);
 
-    uint32_t gc_values [] = {state.background_color};
-    xcb_create_gc (dis, gc, screen->root, XCB_GC_BACKGROUND , gc_values);
+    uint32_t gc_values [] = {state.fg_color, state.bg_color};
+    xcb_create_gc (dis, gc, screen->root, XCB_GC_FOREGROUND | XCB_GC_BACKGROUND , gc_values);
 
     uint32_t values [] = {pid, state.xevent_mask};
     xcb_create_window(dis, XCB_COPY_FROM_PARENT, win, parent? parent: screen->root, 0, 0, GET(state.win_width, 200), GET(state.win_height, 200), 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,

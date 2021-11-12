@@ -69,34 +69,32 @@ typedef struct {
     void* image_data;
 } ImageHolder;
 
-typedef struct {
-} StartupState;
-
-typedef struct {
-    int num_active_images;
+typedef struct State {
+    int num_active_images; // -n
     const char** file_names;
     uint16_t num_files;
 
-    uint32_t file_index;
-    uint32_t rows;
-    uint32_t cols;
+    uint32_t file_index; // -i
+    uint32_t rows; // -r
+    uint32_t cols; // -c
     ScaleMode scale_mode;
     AlignMode align_mode_x;
     AlignMode align_mode_y;
     float zoom;
-    bool right_to_left;
+    bool right_to_left; // -d
 
     uint16_t ignore_mask;
     uint32_t xevent_mask;
-    uint32_t background_color;
+    uint32_t bg_color;
+    uint32_t fg_color;
     const char* name;
-    const char* class_name;
 
     uint16_t padding_x;
     uint16_t padding_y;
 
-    uint16_t drawable;
+    uint32_t parent; // -e
     uint32_t wid;
+    uint32_t drawable;
     uint16_t win_width;
     uint16_t win_height;
     uint16_t event_counter;
