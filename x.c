@@ -25,6 +25,8 @@ xcb_atom_t utf8_string_atom;
 
 xcb_generic_event_t* event;
 
+Binding* all_bindings[] = {user_bindings, bindings};
+
 xcb_atom_t get_atom(xcb_connection_t* dis, const char*name) {
     xcb_intern_atom_reply_t* reply;
     reply = xcb_intern_atom_reply(dis, xcb_intern_atom(dis, 0, strlen(name), name), NULL);
@@ -120,12 +122,17 @@ void flush() {
 
 void initlizeBindings() {
     xcb_key_symbols_t * symbols = xcb_key_symbols_alloc(dis);
-    for (int i = 0; bindings[i].func; i++) {
-        xcb_keycode_t * codes = xcb_key_symbols_get_keycode(symbols, bindings[i].keysym);
-        bindings[i].keycode = codes[0];
-        free(codes);
-    }
-    xcb_key_symbols_free  (symbols);
+    for(int n = 0; n < LEN(all_bindings); n++)
+        for (int i = 0; all_bindings[n] && all_bindings[n][i].func; i++) {
+            if(all_bindings[n][i].keysym < 8 )
+                all_bindings[n][i].keycode = all_bindings[n][i].keysym;
+            else {
+                xcb_keycode_t * codes = xcb_key_symbols_get_keycode(symbols, all_bindings[n][i].keysym);
+                all_bindings[n][i].keycode = codes[0];
+                free(codes);
+            }
+        }
+    xcb_key_symbols_free(symbols);
 }
 
 void processXEvent(xcb_generic_event_t* event) {
@@ -154,12 +161,13 @@ bool processQueuedXEvents() {
 void onKeyPress() {
     xcb_keycode_t detail = ((xcb_key_press_event_t*)event)->detail;
     uint8_t mod = ((xcb_key_press_event_t*)event)->state & ~state.ignore_mask;
-    for (int i = 0; bindings[i].func; i++) {
-        if(bindings[i].keycode == detail && bindings[i].mod == mod) {
-            bindings[i].func(bindings[i].arg);
-            break;
+    for(int n = 0; n < LEN(all_bindings); n++)
+        for (int i = 0; all_bindings[n][i].func; i++) {
+            if(all_bindings[n][i].keycode == detail && all_bindings[n][i].mod == mod) {
+                all_bindings[n][i].func(all_bindings[n][i].arg);
+                return;
+            }
         }
-    }
 }
 
 void onConfigureEvent() {

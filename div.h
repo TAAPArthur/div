@@ -25,6 +25,7 @@ typedef struct {
 } Binding;
 
 extern Binding bindings[];
+extern Binding user_bindings[];
 extern const char** initial_args;
 extern int initial_num_args;
 
