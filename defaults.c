@@ -12,6 +12,7 @@ State state = {
     .xevent_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY,
     .right_to_left = 0,
     .scale_mode = SCALE_HEIGHT,
+    .zoom = 1,
 };
 
 void onStartup();
@@ -42,8 +43,8 @@ Binding bindings[] = {
     {ShiftMask, XK_f, cycleScaleMode, -1},
     {0, XK_semicolon, cycleAlignment, 1},
     {ShiftMask, XK_semicolon, cycleAlignment, -1},
-    {0, XK_minus, zoom,        -2},
-    {ShiftMask, XK_plus, zoom, +2},
+    {0, XK_minus, zoom,        -1},
+    {ShiftMask, XK_plus, zoom, +1},
     {0, XK_equal, zoom,        0},
     {0, XK_d, toggle_multi_page,        2},
     {0, XK_t, toggle_multi_page,        16},

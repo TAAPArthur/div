@@ -54,11 +54,12 @@ void cycleScaleMode(int delta) {
     state.scale_mode = CYCLE(state.scale_mode, delta, LAST_SCALE_MODE);
 }
 
+float ZOOM_STEP = 1.2599210498948732; /* 2^(1/3) */
 void zoom(int delta) {
     if(delta > 0)
-        state.zoom *= delta;
+        state.zoom *= ZOOM_STEP;
     else if(delta < 0)
-        state.zoom /= -delta;
+        state.zoom /= ZOOM_STEP;
     else
         state.zoom = 1;
 }
