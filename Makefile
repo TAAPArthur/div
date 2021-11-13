@@ -1,4 +1,4 @@
-LDLIBS += -lImlib2 -lxcb -lxcb-keysyms -lxcb-icccm -lX11-xcb -lX11
+LDLIBS += -lImlib2 -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image
 CFLAGS = -g
 BIN=div
 

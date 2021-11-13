@@ -1,22 +1,16 @@
 #include <assert.h>
 #include <poll.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_icccm.h>
 #include <xcb/xcb_keysyms.h>
-#include <Imlib2.h>
-#include <X11/Xlib-xcb.h>
 
-#include <X11/X.h>
-#include <X11/keysym.h>
 #include "div.h"
 #include "x.h"
 
 xcb_connection_t* dis;
-Display* dpy;
 xcb_gcontext_t gc;
 
 xcb_atom_t pid_atom;
@@ -35,6 +29,7 @@ xcb_atom_t get_atom(xcb_connection_t* dis, const char*name) {
     return atom;
 }
 
+int depth;
 xcb_window_t createWindow(xcb_connection_t* dis, xcb_window_t parent) {
     xcb_screen_iterator_t iter = xcb_setup_roots_iterator (xcb_get_setup (dis));
     xcb_screen_t* screen = iter.data;
@@ -44,6 +39,8 @@ xcb_window_t createWindow(xcb_connection_t* dis, xcb_window_t parent) {
     xcb_window_t pid = xcb_generate_id (dis);
     state.drawable =pid;
     xcb_create_pixmap(dis, screen->root_depth, pid, screen->root, 5000, 5000);
+
+    depth = screen->root_depth;
 
     gc = xcb_generate_id (dis);
 
@@ -80,15 +77,9 @@ void setWindowProperties(xcb_connection_t* dis, xcb_window_t win) {
 }
 
 void openXConnection() {
-    dpy = XOpenDisplay(NULL);
-    if(!dpy) {
-        exit(2);
-    }
-    dis = XGetXCBConnection(dpy);
-    //dis = xcb_connect(NULL, NULL);
+    dis = xcb_connect(NULL, NULL);
     if(xcb_connection_has_error(dis))
         exit(2);
-    XSetEventQueueOwner(dpy, XCBOwnsEventQueue);
 
     pid_atom = get_atom(dis, "_NET_WM_PID");
     wm_name_atom = get_atom(dis, "_NET_WM_NAME");
@@ -101,11 +92,6 @@ uint32_t setupXConnection() {
     setWindowProperties(dis, wid);
     addNewEventFD(xcb_get_file_descriptor(dis), POLLIN, processXEvents);
     xcb_map_window(dis, wid); // TODO move later
-
-    imlib_context_set_display(dpy);
-    imlib_context_set_visual(DefaultVisual(dpy, DefaultScreen(dpy)));
-    imlib_context_set_colormap(DefaultColormap(dpy, DefaultScreen(dpy)));
-    imlib_context_set_drawable(state.drawable);
     return wid;
 }
 
