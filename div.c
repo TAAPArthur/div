@@ -94,6 +94,7 @@ int main(int argc, const char **argv) {
     RUN_EVENT(ON_STARTUP);
     RUN_EVENT(PROCESS_ARGS, argc, argv);
     state.wid = setupXConnection();
+    initlizeBindings();
     RUN_EVENT(POST_XCONNECTION);
     open_images();
     doEventLoop();

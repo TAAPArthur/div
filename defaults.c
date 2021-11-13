@@ -32,7 +32,6 @@ void (*events[LAST_EVENT])() = {
     [ON_STARTUP] = onStartup,
 
     [PROCESS_ARGS] = parse_options,
-    [POST_XCONNECTION] = initlizeBindings,
     [RENDER] = render,
     [SET_TITLE] = default_window_title,
 };
