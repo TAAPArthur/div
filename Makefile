@@ -17,6 +17,7 @@ $(BIN).sh: $(BIN).sh.template
 install: $(BIN) $(BIN).a $(BIN).sh
 	install -Dt $(DESTDIR)/usr/libexec $(BIN)
 	install -Dt $(DESTDIR)/usr/lib $(BIN).a
+	install -Dt $(DESTDIR)/usr/include/$(BIN) *.h
 	install -D div.sh $(DESTDIR)/usr/bin/$(BIN)
 
 uninstall:
