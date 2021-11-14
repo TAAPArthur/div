@@ -60,7 +60,7 @@ typedef enum {
 } AlignMode;
 
 extern void (*events[])();
-const char** defaultSingleArgParse(const char **argv);
+const char** defaultSingleArgParse(const char **argv, bool* stop);
 void render();
 
 void maybe_render();

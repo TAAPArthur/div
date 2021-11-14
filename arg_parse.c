@@ -4,7 +4,7 @@
 #define GET_ARG strtol(GET_ARG_STR, NULL, 0);
 #define GET_ARG_F strtof(GET_ARG_STR, NULL);
 #define SET(C, VAR, VALUE) case C: VAR = VALUE; break
-const char** defaultSingleArgParse(const char **argv) {
+const char** defaultSingleArgParse(const char **argv, bool* stop) {
     switch(argv[0][1]) {
         SET('S', state.scale_mode, getFromEnumValue(GET_ARG_STR));
         SET('X', state.align_mode_x, getFromEnumValue(GET_ARG_STR));
@@ -16,6 +16,8 @@ const char** defaultSingleArgParse(const char **argv) {
         SET('o', state.file_index, GET_ARG);
         SET('r', state.rows, GET_ARG);
         SET('t', state.user_title, GET_ARG_STR);
+        default:
+            *stop =1;
     }
     return argv;
 }

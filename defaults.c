@@ -47,6 +47,7 @@ void defaultOpenImages() {
 }
 
 void defaultParseOptions(int argc, const char **argv) {
+    bool stop = 0;
     for(argv++; argv[0]; argv++){
         if(argv[0][0] != '-')
             break;
@@ -54,7 +55,9 @@ void defaultParseOptions(int argc, const char **argv) {
             argv++;
             break;
         }
-        argv = defaultSingleArgParse(argv);
+        argv = defaultSingleArgParse(argv, &stop);
+        if(stop)
+            break;
     }
     if(argv[0]) {
         state.file_names = argv;
