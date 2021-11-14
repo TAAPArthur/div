@@ -35,6 +35,8 @@ enum {
     POST_XCONNECTION,
     RENDER,
     SET_TITLE,
+
+    OPEN_IMAGES,
     POST_EVENT,
     LAST_EVENT
 };
@@ -61,16 +63,18 @@ void render();
 void maybe_render();
 
 typedef struct {
-    const char* path;
-    int16_t offset_x;
-    int16_t offset_y;
+    const char* name;
     uint32_t image_width;
     uint32_t image_height;
+    void* image_data;
+    void* raw;
+
+    int16_t offset_x;
+    int16_t offset_y;
     float zoom;
     uint16_t padding_x;
     uint16_t padding_y;
-    void* image_data;
-} ImageHolder;
+} ImageInfo;
 
 typedef struct State {
     int num_active_images; // -n
@@ -102,6 +106,8 @@ typedef struct State {
     uint16_t win_height;
     uint16_t event_counter;
     bool dirty;
+
+    void* image_context;
 } State;
 
 
@@ -109,7 +115,7 @@ int addNewEventFD(int fd, short events, void (*callback)());
 void removeExtraEvent(int index);
 
 
-extern ImageHolder image_holders[];
+extern ImageInfo image_holders[];
 extern State state;
 
 static inline int getNumActiveImages() {

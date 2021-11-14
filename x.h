@@ -17,5 +17,6 @@ void onConfigureEvent();
 
 void setWindowTitle(const char* str);
 
+
 void flush();
 #endif

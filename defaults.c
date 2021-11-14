@@ -5,6 +5,7 @@
 #include <X11/keysym.h>
 #include <xcb/xcb.h>
 #include <stdio.h>
+#include "image.h"
 
 State state = {
     .num_active_images = 1,
@@ -20,10 +21,30 @@ void onStartup();
 void default_window_title() {
     static char buffer[255];
     if(getNumActiveImages() == 1)
-        snprintf(buffer, sizeof(buffer) -1, "%s %d/%d", image_holders->path, state.file_index + 1, state.num_files);
+        snprintf(buffer, sizeof(buffer) -1, "%s %d/%d", image_holders->name, state.file_index + 1, state.num_files);
     else
-        snprintf(buffer, sizeof(buffer) -1, "%s %d-%d of %d", image_holders->path, state.file_index + 1, state.file_index + 1 + getNumActiveImages() - 1, state.num_files);
+        snprintf(buffer, sizeof(buffer) -1, "%s %d-%d of %d", image_holders->name, state.file_index + 1, state.file_index + 1 + getNumActiveImages() - 1, state.num_files);
     setWindowTitle(buffer);
+}
+
+void default_open_images() {
+    for (int i = 0; i < getNumActiveImages(); i++) {
+        image_holders[i].image_data = openImage(state.image_context, state.file_index + i, image_holders[i].image_data);
+        if(!image_holders[i].image_data) {
+            image_holders[i].name = NULL;
+            continue;
+        }
+        image_holders[i].image_width = getImageWidth(image_holders[i].image_data);
+        image_holders[i].image_height = getImageHeight(image_holders[i].image_data);
+        image_holders[i].name = getImageName(image_holders[i].image_data);
+        image_holders[i].raw = getRawImage(image_holders[i].image_data);
+
+
+    }
+    state.num_files = getImageNum(state.image_context);
+}
+void create_image_context() {
+    state.image_context = createContext(state.file_names, state.num_files, 0, 0);
 }
 
 void (*events[LAST_EVENT])() = {
@@ -33,7 +54,9 @@ void (*events[LAST_EVENT])() = {
     [ON_STARTUP] = onStartup,
 
     [PROCESS_ARGS] = parse_options,
+    [POST_XCONNECTION] = create_image_context,
     [RENDER] = render,
+    [OPEN_IMAGES] = default_open_images,
     [SET_TITLE] = default_window_title,
 };
 

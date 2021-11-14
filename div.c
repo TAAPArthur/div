@@ -5,9 +5,10 @@
 #include "functions.h"
 #include "image.h"
 #include "x.h"
+#include "image_view.h"
 const char** initial_args;
 int initial_num_args;
-ImageHolder image_holders[MAX_IMAGES];
+ImageInfo image_holders[MAX_IMAGES];
 
 void parse_options(int argc, const char **argv) {
     if(argc - 1) {
@@ -65,7 +66,6 @@ void doEventLoop() {
     }
 }
 
-
 void maybe_render() {
     static State last_state;
     static uint32_t last_num_active_images;
@@ -79,8 +79,8 @@ void maybe_render() {
         RUN_EVENT(SET_TITLE);
         last_state = last_state;
     }
-
 }
+
 void render() {
     clear_drawable(state.drawable, state.win_width, state.win_height);
     img_render(image_holders, getNumActiveImages(), state.drawable, state.win_width, state.win_height);

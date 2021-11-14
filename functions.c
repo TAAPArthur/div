@@ -6,9 +6,7 @@
 #define TOGGLE(A,B, D) A = (A==B ? D : B)
 
 void open_images() {
-    for (int i = 0; i < getNumActiveImages(); i++) {
-        img_load(image_holders + i, getFilePath(state.file_index + i));
-    }
+    RUN_EVENT(OPEN_IMAGES);
 }
 
 void next_image(int arg) {

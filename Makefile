@@ -1,8 +1,7 @@
-LDLIBS += -lImlib2 -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image
-CFLAGS = -g
+LDLIBS += -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -limgloader
 BIN=div
 
-OBJS = $(patsubst %.c,%.o,$(wildcard *.c))
+OBJS = defaults.o  div.o  functions.o  image_view.o  x.o
 
 all: $(BIN).a $(BIN) $(BIN).sh
 
@@ -24,4 +23,4 @@ uninstall:
 	rm -f $(DESTDIR)/usr/libexec/$(BIN) $(DESTDIR)/usr/lib/$(BIN).a $(DESTDIR)/usr/bin/$(BIN)
 
 clean:
-	rm -f *.o $(BIN).a $(BIN) $(BIN).sh
+	rm -f *.o $(BIN).a $(BIN) $(BIN).sh libimgloader/imgloader.o
