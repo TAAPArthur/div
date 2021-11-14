@@ -216,17 +216,14 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
             effective_width = get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) ;
             effective_height = get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1);
 
-            //imlib_render_image_part_on_drawable_at_size(holder[i].offset_x, holder[i].offset_y,
-            //        holder[i].image_width/zoom , holder[i].image_height/zoom, x - (state.right_to_left? effective_width: 0), y, effective_width, effective_height);
-
             xcb_image_t *image = xcb_image_create_native(dis,effective_width*zoom ,effective_height*zoom ,XCB_IMAGE_FORMAT_Z_PIXMAP ,depth,NULL, 0,NULL);
             if(!image)
                 return;
 
-            scale(holder[i].raw, holder[i].image_width, holder[i].image_height, effective_width*zoom , effective_height*zoom, image->stride, image->data, MIN(effective_height,  effective_height*zoom));
+            scale(holder[i].raw, holder[i].image_width, holder[i].image_height, effective_width*zoom , effective_height*zoom, image->stride, image->data, MIN(win_height, MIN(effective_height,  effective_height*zoom)));
 
-            if(zoom > 1) {
-                xcb_image_t *sub_image = xcb_image_subimage(image,holder[i].offset_x, holder[i].offset_y, effective_width ,effective_height,NULL,0,NULL);
+            if(zoom > 1 || effective_width > win_width || effective_height > win_height) {
+                xcb_image_t *sub_image = xcb_image_subimage(image,holder[i].offset_x, holder[i].offset_y, MIN(effective_width, win_width) ,MIN(effective_height, win_height),NULL,0,NULL);
                xcb_image_destroy(image);
                image = sub_image;
             }
