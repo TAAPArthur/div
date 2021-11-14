@@ -1,7 +1,6 @@
+#include <X11/X.h>
 #include <assert.h>
 #include <poll.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
@@ -161,7 +160,8 @@ void onKeyPress() {
     uint8_t mod = ((xcb_key_press_event_t*)event)->state & ~state.ignore_mask;
     for(int n = 0; n < LEN(all_bindings); n++)
         for (int i = 0; all_bindings[n][i].func; i++) {
-            if(all_bindings[n][i].keycode == detail && all_bindings[n][i].mod == mod) {
+            if( (!all_bindings[n][i].keycode || all_bindings[n][i].keycode == detail) &&
+                    (all_bindings[n][i].mod == AnyModifier || all_bindings[n][i].mod == mod)) {
                 all_bindings[n][i].func(all_bindings[n][i].arg);
                 return;
             }
