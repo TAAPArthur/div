@@ -7,6 +7,10 @@ make
 make install
 ```
 
+The following are the depedant libs
+` -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -limgloader`
+Note that [limgloader](https://github.com/TAAPArthur/libimageloader) is just a wrapper around other image loaders.
+
 ## Configuration
 1. Create ~/.config/dim/config.c
 2. Create a array called user_bindings of type Binding. Also define a method with signature of `void onStartup(){}` see [samples/no_op.c] for an example
@@ -31,17 +35,11 @@ In line with the goal,
 1. Custom keybindings
 2. Grid view: see RC images in a RxC grid
 3. View images left-to-right or right-to-left
-4. Zooming and scaling
-5. Under 1000 lines of code. Only other image I'm aware of that is comparable is [lel](https://git.codemadness.org/lel/files.html)
-6. Modular design would make it easy to swap out X11/imlib backends
-
-## Non Features
-These will probably never be enabled by default, but should be possible to easily achieve. Could possibly make it into `helpers/`
-1. Directory loading (easy to due from config.h;)
-2. Archive support (extract to a temporary dir)
-3. Support for arbitrary image formats (send a PR to the backend)
+4. Zooming and (basic) scaling
+5. Panning across images
+6. Under 1000 lines of code. Only other image I'm aware of that is comparable is [lel](https://git.codemadness.org/lel/files.html) and [meh](https://github.com/jhawthorn/meh) both of which are far less customizable.
+7. Modular design would make it easy to swap out X11/imlib backends
+8. Ability to load from zip files, directories, pipes and urls thanks to the flexiable backend
 
 ## TODO
-1. Remove Xlib dependency. I wanted to use xcb because it is easier to use. However, imlib doesn't support it, so brought in -lX11-xcb -lX11 to avoid the issue. Ideally we wouldn't have this many dependencies.
-2. Remove imlib2 dependency. Perhaps a bold move
-2. Add env var loading and cli args to helpers.
+1. Add env var loading and cli args to helpers.
