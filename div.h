@@ -46,6 +46,7 @@ typedef enum {
     SCALE_HEIGHT,
     SCALE_MAX,
     SCALE_MIN,
+    SCALE_FILL,
     LAST_SCALE_MODE,
 } ScaleMode;
 

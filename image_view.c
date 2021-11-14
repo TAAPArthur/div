@@ -36,20 +36,14 @@ float get_effective_dim(uint32_t image_width, uint32_t image_height, uint32_t wi
     }
 	switch (scale_mode) {
 		case SCALE_WIDTH:
-            if(!dim)
-                return win_width;
-            else
-                return image_height / zw;
+            return !dim ? win_width : image_height / zw;
 		case SCALE_HEIGHT:
-            if(dim)
-                return win_height;
-            else
-                return image_width / zh;
+            return dim ? win_height : image_width / zh;
+		case SCALE_NORMAL:
+            return dim ? image_height : image_width;
+        case SCALE_FILL:
         default:
-            if(dim)
-                return win_height;
-            else
-                return win_width;
+            return dim ? win_height : win_width;
 	}
 }
 
