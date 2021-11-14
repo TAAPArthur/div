@@ -83,6 +83,7 @@ void (*events[LAST_EVENT])() = {
 };
 
 Binding bindings[] = {
+    {ShiftMask, XK_q, exit, 4},
     {0, XK_q, exit, 0},
     {0, XK_f, cycleScaleMode, 1},
     {ShiftMask, XK_f, cycleScaleMode, -1},
