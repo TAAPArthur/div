@@ -19,7 +19,7 @@ State state = {
 
 void onStartup();
 
-void default_window_title() {
+void defaultWindowTitle() {
     static char buffer[255];
     if(getNumActiveImages() == 1)
         snprintf(buffer, sizeof(buffer) - 1, "%s %s %d/%d", state.user_title, image_holders->name, state.file_index + 1, state.num_files);
@@ -28,7 +28,7 @@ void default_window_title() {
     setWindowTitle(buffer);
 }
 
-void default_open_images() {
+void defaultOpenImages() {
     for (int i = 0; i < getNumActiveImages(); i++) {
         image_holders[i].image_data = openImage(state.image_context, state.file_index + i, image_holders[i].image_data);
         if(!image_holders[i].image_data) {
@@ -45,7 +45,7 @@ void default_open_images() {
     state.num_files = getImageNum(state.image_context);
 }
 
-void default_parse_options(int argc, const char **argv) {
+void defaultParseOptions(int argc, const char **argv) {
     for(argv++; argv[0]; argv++){
         if(argv[0][0] != '-')
             break;
@@ -60,7 +60,7 @@ void default_parse_options(int argc, const char **argv) {
     }
 }
 
-void create_image_context() {
+void createImageContext() {
     state.image_context = createContext(state.file_names, state.num_files, REMOVE_INVALID );
 }
 
@@ -70,12 +70,12 @@ void (*events[LAST_EVENT])() = {
 
     [ON_STARTUP] = onStartup,
 
-    [PROCESS_ARGS] = default_parse_options,
+    [PROCESS_ARGS] = defaultParseOptions,
     [PRE_MAP_WINDOW] = setWindowProperties,
-    [POST_XCONNECTION] = create_image_context,
+    [POST_XCONNECTION] = createImageContext,
     [RENDER] = render,
-    [OPEN_IMAGES] = default_open_images,
-    [SET_TITLE] = default_window_title,
+    [OPEN_IMAGES] = defaultOpenImages,
+    [SET_TITLE] = defaultWindowTitle,
 };
 
 Binding bindings[] = {
