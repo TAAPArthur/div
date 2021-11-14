@@ -10,13 +10,6 @@ const char** initial_args;
 int initial_num_args;
 ImageInfo image_holders[MAX_IMAGES];
 
-void parse_options(int argc, const char **argv) {
-    if(argc - 1) {
-        state.file_names = argv + 1;
-        state.num_files= argc - 1;
-    }
-}
-
 struct {
     struct pollfd pollFDs[255];
     void(*extraEventCallBacks[255])();

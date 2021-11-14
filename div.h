@@ -58,7 +58,7 @@ typedef enum {
 } AlignMode;
 
 extern void (*events[])();
-void parse_options(int argc, const char **argv);
+const char** defaultSingleArgParse(const char **argv);
 void render();
 
 void maybe_render();
@@ -78,18 +78,18 @@ typedef struct {
 } ImageInfo;
 
 typedef struct State {
-    int num_active_images; // -n
+    int num_active_images;
     const char** file_names;
     uint16_t num_files;
 
-    uint32_t file_index; // -i
-    uint32_t rows; // -r
-    uint32_t cols; // -c
+    uint32_t file_index;
+    uint32_t rows;
+    uint32_t cols;
     ScaleMode scale_mode;
     AlignMode align_mode_x;
     AlignMode align_mode_y;
     float zoom;
-    bool right_to_left; // -d
+    bool right_to_left;
 
     uint16_t ignore_mask;
     uint32_t xevent_mask;
@@ -100,7 +100,7 @@ typedef struct State {
     uint16_t padding_x;
     uint16_t padding_y;
 
-    uint32_t parent; // -e
+    uint32_t parent;
     uint32_t wid;
     uint32_t drawable;
     uint16_t win_width;

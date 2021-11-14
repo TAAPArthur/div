@@ -1,7 +1,7 @@
 LDLIBS += -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -limgloader
 BIN=div
 
-OBJS = defaults.o  div.o  functions.o  image_view.o  x.o
+OBJS = arg_parse.o defaults.o  div.o  functions.o  image_view.o  x.o
 
 all: $(BIN).a $(BIN) $(BIN).sh
 
@@ -24,4 +24,12 @@ uninstall:
 	rm -f $(DESTDIR)/usr/libexec/$(BIN) $(DESTDIR)/usr/lib/$(BIN).a $(DESTDIR)/usr/bin/$(BIN)
 
 clean:
-	rm -f *.o $(BIN).a $(BIN) $(BIN).sh libimgloader/imgloader.o
+	rm -f *.o $(BIN).a $(BIN) $(BIN).sh *_gen.h
+
+arg_parse.c: arg_parse_gen.h
+
+arg_parse_gen.h: div.h
+	printf '#include <string.h>\n' > $@
+	printf "int getFromEnumValue(const char* str) {\n" >> $@
+	sed -nE 's/^\s*((ALIGN|SCALE)_(([A-Z]*)?_?([A-Z]*))).*/    if(!strcasecmp("\3", str) || !strcasecmp(str, "\4") || !strcasecmp(str, "\5") || "\4"[0] == str[0] || "\5"[0] == str[0])return \1;/p' $^ >> $@
+	printf "\treturn 0;\n}" >> $@

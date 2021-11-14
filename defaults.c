@@ -43,6 +43,22 @@ void default_open_images() {
     }
     state.num_files = getImageNum(state.image_context);
 }
+
+void default_parse_options(int argc, const char **argv) {
+    for(argv++; argv[0]; argv++){
+        if(argv[0][0] != '-')
+            break;
+        if(argv[0][1] == '-' && !argv[0][2]) {
+            argv++;
+            break;
+        }
+        argv = defaultSingleArgParse(argv);
+    }
+    if(argv[0]) {
+        state.file_names = argv;
+    }
+}
+
 void create_image_context() {
     state.image_context = createContext(state.file_names, state.num_files, 0, 0);
 }
@@ -53,7 +69,7 @@ void (*events[LAST_EVENT])() = {
 
     [ON_STARTUP] = onStartup,
 
-    [PROCESS_ARGS] = parse_options,
+    [PROCESS_ARGS] = default_parse_options,
     [POST_XCONNECTION] = create_image_context,
     [RENDER] = render,
     [OPEN_IMAGES] = default_open_images,
