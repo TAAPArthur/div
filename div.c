@@ -57,6 +57,8 @@ int processEvents(int timeout) {
 void doEventLoop() {
     while(eventFDInfo.numberOfFDsToPoll) {
         processEvents(-1);
+        if(!isXConnectionOpen())
+            continue;
         RUN_EVENT(POST_EVENT);
         do
             maybe_render();

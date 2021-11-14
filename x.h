@@ -18,5 +18,8 @@ void onConfigureEvent();
 void setWindowTitle(const char* str);
 
 
+void closeXConnection();
+int isXConnectionOpen();
+
 void flush();
 #endif

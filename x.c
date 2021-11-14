@@ -89,6 +89,11 @@ void openXConnection() {
     utf8_string_atom = get_atom(dis, "UTF8_STRING");
 }
 
+void closeXConnection() {
+    xcb_disconnect(dis);
+    dis = NULL;
+}
+
 uint32_t setupXConnection() {
     openXConnection();
     xcb_window_t wid = createWindow(dis, 0);// support embedded
@@ -133,17 +138,15 @@ void processXEvent(xcb_generic_event_t* event) {
 }
 
 void processXEvents() {
-    while(event = xcb_poll_for_event(dis)) {
+    while(dis && (event = xcb_poll_for_event(dis))) {
         processXEvent(event);
         free(event);
     }
 }
 
 bool processQueuedXEvents() {
-    if(xcb_connection_has_error(dis))
-        exit(3);
     bool processedEvent = 0;
-    while(event = xcb_poll_for_queued_event(dis)) {
+    while(dis && (event = xcb_poll_for_queued_event(dis))) {
         processXEvent(event);
         free(event);
         processedEvent = 1;
@@ -176,6 +179,12 @@ void setWindowTitle(const char* str) {
     xcb_change_property(dis, XCB_PROP_MODE_REPLACE, state.wid, XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8, strlen(str), str);
 }
 
+int isXConnectionOpen() {
+    if(dis && xcb_connection_has_error(dis))
+        closeXConnection();
+
+    return !!dis;
+}
 
 void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uint32_t win_height) {
 	uint32_t dw, dh;
@@ -211,6 +220,8 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
             //        holder[i].image_width/zoom , holder[i].image_height/zoom, x - (state.right_to_left? effective_width: 0), y, effective_width, effective_height);
 
             xcb_image_t *image = xcb_image_create_native(dis,effective_width*zoom ,effective_height*zoom ,XCB_IMAGE_FORMAT_Z_PIXMAP ,depth,NULL, 0,NULL);
+            if(!image)
+                return;
 
             scale(holder[i].raw, holder[i].image_width, holder[i].image_height, effective_width*zoom , effective_height*zoom, image->stride, image->data, MIN(effective_height,  effective_height*zoom));
 
