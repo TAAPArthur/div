@@ -32,6 +32,7 @@ extern int initial_num_args;
 enum {
     ON_STARTUP = 32,
     PROCESS_ARGS,
+    PRE_MAP_WINDOW,
     POST_XCONNECTION,
     RENDER,
     SET_TITLE,

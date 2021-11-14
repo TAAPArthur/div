@@ -21,5 +21,7 @@ void setWindowTitle(const char* str);
 void closeXConnection();
 int isXConnectionOpen();
 
+void setWindowProperties(uint32_t wid);
+
 void flush();
 #endif

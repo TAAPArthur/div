@@ -88,7 +88,7 @@ int main(int argc, const char **argv) {
     initial_num_args = argc;
     RUN_EVENT(ON_STARTUP);
     RUN_EVENT(PROCESS_ARGS, argc, argv);
-    state.wid = setupXConnection();
+    setupXConnection();
     initlizeBindings();
     RUN_EVENT(POST_XCONNECTION);
     open_images();

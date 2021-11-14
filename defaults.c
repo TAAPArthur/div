@@ -70,6 +70,7 @@ void (*events[LAST_EVENT])() = {
     [ON_STARTUP] = onStartup,
 
     [PROCESS_ARGS] = default_parse_options,
+    [PRE_MAP_WINDOW] = setWindowProperties,
     [POST_XCONNECTION] = create_image_context,
     [RENDER] = render,
     [OPEN_IMAGES] = default_open_images,

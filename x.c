@@ -72,13 +72,6 @@ void setWindowClass(xcb_connection_t* dis, xcb_window_t win) {
     xcb_icccm_set_wm_class(dis, win, LEN(class_instance), class_instance);
 }
 
-void setWindowProperties(xcb_connection_t* dis, xcb_window_t win) {
-    setWindowHints(dis, win);
-    pid_t pid = getpid();
-    xcb_change_property(dis, XCB_PROP_MODE_REPLACE, win, pid_atom, XCB_ATOM_CARDINAL, 32, 1, &pid);
-    setWindowClass(dis, win);
-}
-
 void openXConnection() {
     dis = xcb_connect(NULL, NULL);
     if(xcb_connection_has_error(dis))
@@ -97,7 +90,8 @@ void closeXConnection() {
 uint32_t setupXConnection() {
     openXConnection();
     xcb_window_t wid = createWindow(dis, state.parent);
-    setWindowProperties(dis, wid);
+    state.wid = wid;
+    RUN_EVENT(PRE_MAP_WINDOW, wid);
     addNewEventFD(xcb_get_file_descriptor(dis), POLLIN, processXEvents);
     xcb_map_window(dis, wid); // TODO move later
     return wid;
@@ -114,6 +108,14 @@ void clear_window(xcb_window_t wid, uint16_t width, uint16_t height) {
 
 void flush() {
     xcb_flush(dis);
+}
+
+
+void setWindowProperties(xcb_window_t win) {
+    setWindowHints(dis, win);
+    pid_t pid = getpid();
+    xcb_change_property(dis, XCB_PROP_MODE_REPLACE, win, pid_atom, XCB_ATOM_CARDINAL, 32, 1, &pid);
+    setWindowClass(dis, win);
 }
 
 void initlizeBindings() {
