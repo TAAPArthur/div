@@ -60,7 +60,7 @@ void default_parse_options(int argc, const char **argv) {
 }
 
 void create_image_context() {
-    state.image_context = createContext(state.file_names, state.num_files, 0, 0);
+    state.image_context = createContext(state.file_names, state.num_files, REMOVE_INVALID );
 }
 
 void (*events[LAST_EVENT])() = {
