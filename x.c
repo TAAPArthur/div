@@ -96,7 +96,7 @@ void closeXConnection() {
 
 uint32_t setupXConnection() {
     openXConnection();
-    xcb_window_t wid = createWindow(dis, 0);// support embedded
+    xcb_window_t wid = createWindow(dis, state.parent);
     setWindowProperties(dis, wid);
     addNewEventFD(xcb_get_file_descriptor(dis), POLLIN, processXEvents);
     xcb_map_window(dis, wid); // TODO move later
