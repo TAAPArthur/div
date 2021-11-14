@@ -22,6 +22,7 @@ typedef struct {
     void (*func)();
     int arg;
     uint8_t keycode;
+    uint8_t type;
 } Binding;
 
 extern Binding bindings[];
@@ -94,6 +95,7 @@ typedef struct State {
 
     uint16_t ignore_mask;
     uint32_t xevent_mask;
+    uint32_t default_binding_type;
     uint32_t bg_color;
     uint32_t fg_color;
     const char* name;

@@ -11,6 +11,7 @@ State state = {
     .num_active_images = 1,
     .ignore_mask = Mod2Mask | LockMask,
     .xevent_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY,
+    .default_binding_type = XCB_KEY_PRESS,
     .right_to_left = 0,
     .scale_mode = SCALE_HEIGHT,
     .zoom = 1,

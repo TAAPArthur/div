@@ -121,6 +121,8 @@ void initlizeBindings() {
     xcb_key_symbols_t * symbols = xcb_key_symbols_alloc(dis);
     for(int n = 0; n < LEN(all_bindings); n++)
         for (int i = 0; all_bindings[n] && all_bindings[n][i].func; i++) {
+            if(!all_bindings[n][i].type)
+                all_bindings[n][i].type = state.default_binding_type;
             if(all_bindings[n][i].keysym < 8 )
                 all_bindings[n][i].keycode = all_bindings[n][i].keysym;
             else {
@@ -158,10 +160,13 @@ bool processQueuedXEvents() {
 void onKeyPress() {
     xcb_keycode_t detail = ((xcb_key_press_event_t*)event)->detail;
     uint8_t mod = ((xcb_key_press_event_t*)event)->state & ~state.ignore_mask;
+    uint8_t type = ((xcb_key_press_event_t*)event)->response_type;
     for(int n = 0; n < LEN(all_bindings); n++)
         for (int i = 0; all_bindings[n][i].func; i++) {
             if( (!all_bindings[n][i].keycode || all_bindings[n][i].keycode == detail) &&
-                    (all_bindings[n][i].mod == AnyModifier || all_bindings[n][i].mod == mod)) {
+                    (all_bindings[n][i].mod == AnyModifier || all_bindings[n][i].mod == mod) &&
+                    (!all_bindings[n][i].type || all_bindings[n][i].type == -1 || all_bindings[n][i].type == type)
+                    ) {
                 all_bindings[n][i].func(all_bindings[n][i].arg);
                 return;
             }
