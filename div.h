@@ -97,6 +97,7 @@ typedef struct State {
     uint32_t bg_color;
     uint32_t fg_color;
     const char* name;
+    const char* user_title;
 
     uint16_t padding_x;
     uint16_t padding_y;

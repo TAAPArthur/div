@@ -15,6 +15,7 @@ const char** defaultSingleArgParse(const char **argv) {
         SET('e', state.parent, GET_ARG);
         SET('o', state.file_index, GET_ARG);
         SET('r', state.rows, GET_ARG);
+        SET('t', state.user_title, GET_ARG_STR);
     }
     return argv;
 }

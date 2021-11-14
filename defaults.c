@@ -14,6 +14,7 @@ State state = {
     .right_to_left = 0,
     .scale_mode = SCALE_HEIGHT,
     .zoom = 1,
+    .user_title = CLASSNAME,
 };
 
 void onStartup();
@@ -21,9 +22,9 @@ void onStartup();
 void default_window_title() {
     static char buffer[255];
     if(getNumActiveImages() == 1)
-        snprintf(buffer, sizeof(buffer) -1, "%s %d/%d", image_holders->name, state.file_index + 1, state.num_files);
+        snprintf(buffer, sizeof(buffer) - 1, "%s %s %d/%d", state.user_title, image_holders->name, state.file_index + 1, state.num_files);
     else
-        snprintf(buffer, sizeof(buffer) -1, "%s %d-%d of %d", image_holders->name, state.file_index + 1, state.file_index + 1 + getNumActiveImages() - 1, state.num_files);
+        snprintf(buffer, sizeof(buffer) - 1, "%s %s %d-%d of %d", state.user_title, image_holders->name, state.file_index + 1, state.file_index + 1 + getNumActiveImages() - 1, state.num_files);
     setWindowTitle(buffer);
 }
 
