@@ -1,5 +1,5 @@
 # Dumb Image Viewer (BETA)
-It can view images... it can also do more, but you'll have to tell it to
+It can view images... it can also do more, but you'll have to tell it to. Think of it as a library to create your own image view that happens to have useable defaults.
 
 ## Install
 ```
@@ -7,7 +7,7 @@ make
 make install
 ```
 
-The following are the depedant libs
+The following are the dependant libs
 ` -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -limgloader`
 Note that [limgloader](https://github.com/TAAPArthur/libimageloader) is just a wrapper around other image loaders.
 
@@ -33,13 +33,20 @@ In line with the goal,
 
 ## Features
 1. Custom keybindings
-2. Grid view: see RC images in a RxC grid
+2. Grid view: see RC images in a RxC grid (which is a generalization of a dual page view)
 3. View images left-to-right or right-to-left
 4. Zooming and (basic) scaling
-5. Panning across images
-6. Under 1000 lines of code. Only other image I'm aware of that is comparable is [lel](https://git.codemadness.org/lel/files.html) and [meh](https://github.com/jhawthorn/meh) both of which are far less customizable.
-7. Modular design would make it easy to swap out X11/imlib backends
-8. Ability to load from zip files, directories, pipes and urls thanks to the flexiable backend
+5. Under 1000 lines of code. Only other image I'm aware of that is comparable is [lel](https://git.codemadness.org/lel/files.html) and [meh](https://github.com/jhawthorn/meh) both of which are far less customizable.
+6. Modular design would make it easy to swap out X11/imlib backends
+7. Ability to load from zip files, directories, pipes and urls thanks to the flexible backend
+
+## Things (trivially) possible from config file
+1. Panning across images
+2. Mouse bindings and key release
+3. Spawning external commands
+4. Reloading image of disk change (ie via inotify)
+5. Loading args from the environment or config file
+6. Custom cli options
 
 ## TODO
-1. Add env var loading and cli args to helpers.
+1. Allow configuring the scaling method
