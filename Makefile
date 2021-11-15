@@ -1,11 +1,12 @@
 LDLIBS += -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -limgloader
 BIN=div
+LIB=lib$(BIN).a
 
 OBJS = arg_parse.o defaults.o  div.o  functions.o  image_view.o  x.o
 
-all: $(BIN).a $(BIN) $(BIN).sh
+all: $(LIB) $(BIN) $(BIN).sh
 
-$(BIN).a: $(OBJS)
+$(LIB): $(OBJS)
 	ar rcs $@ $^
 
 $(BIN): $(OBJS)
@@ -14,17 +15,17 @@ $(BIN): $(OBJS)
 $(BIN).sh: $(BIN).sh.template
 	sed "s/__$(BIN)_libs__/$(LDLIBS)/g" $^ > $@
 
-install: $(BIN) $(BIN).a $(BIN).sh
+install: $(BIN) $(LIB) $(BIN).sh
 	install -Dt $(DESTDIR)/usr/libexec $(BIN)
-	install -Dt $(DESTDIR)/usr/lib $(BIN).a
+	install -Dt $(DESTDIR)/usr/lib $(LIB)
 	install -Dt $(DESTDIR)/usr/include/$(BIN) *.h
 	install -D div.sh $(DESTDIR)/usr/bin/$(BIN)
 
 uninstall:
-	rm -f $(DESTDIR)/usr/libexec/$(BIN) $(DESTDIR)/usr/lib/$(BIN).a $(DESTDIR)/usr/bin/$(BIN)
+	rm -f $(DESTDIR)/usr/libexec/$(BIN) $(DESTDIR)/usr/lib/$(LIB) $(DESTDIR)/usr/bin/$(BIN)
 
 clean:
-	rm -f *.o $(BIN).a $(BIN) $(BIN).sh *_gen.h
+	rm -f *.o $(LIB) $(BIN) $(BIN).sh *_gen.h
 
 arg_parse.c: arg_parse_gen.h
 
