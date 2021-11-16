@@ -14,9 +14,10 @@ void next_page(int arg);
 void open_images();
 void next_image(int arg) ;
 
-void toggle_multi_page(int arg);
 void toggle_right_to_left();
 void toggle_grid(int arg);
+void toggle_column(int arg);
+void toggle_row(int arg);
 
 void jump_start() ;
 

@@ -8,7 +8,6 @@
 #include "image.h"
 
 State state = {
-    .num_active_images = 1,
     .ignore_mask = Mod2Mask | LockMask,
     .xevent_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY,
     .default_binding_type = XCB_KEY_PRESS,
@@ -92,8 +91,8 @@ Binding bindings[] = {
     {0, XK_minus, zoom,        -1},
     {ShiftMask, XK_plus, zoom, +1},
     {0, XK_equal, zoom,        0},
-    {0, XK_d, toggle_multi_page,        2},
-    {0, XK_t, toggle_multi_page,        16},
+    {0, XK_d, toggle_column,        2},
+    {0, XK_t, toggle_grid,        16},
     {0, XK_m, toggle_right_to_left,     },
     {0, XK_g, toggle_grid,    4 },
 

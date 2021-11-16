@@ -30,10 +30,6 @@ void jump_end() {
     open_images();
 }
 
-void toggle_multi_page(int arg) {
-    TOGGLE(state.num_active_images, arg, 1);
-}
-
 void cycleAlignment(int delta) {
     state.align_mode_x = CYCLE(state.align_mode_x, delta, LAST_ALIGN_MODE);
     state.align_mode_y = CYCLE(state.align_mode_y, delta, LAST_ALIGN_MODE);
@@ -70,3 +66,7 @@ void toggle_grid(int arg){
     TOGGLE(state.rows,arg, 0);
     TOGGLE(state.cols,arg, 0);
 }
+
+void toggle_column(int arg) { TOGGLE(state.cols, arg, 1); }
+
+void toggle_row(int arg) { TOGGLE(state.cols, arg, 1); }

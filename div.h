@@ -80,7 +80,6 @@ typedef struct {
 } ImageInfo;
 
 typedef struct State {
-    int num_active_images;
     const char** file_names;
     uint16_t num_files;
 
@@ -124,14 +123,14 @@ extern ImageInfo image_holders[];
 extern State state;
 
 static inline int getNumActiveImages() {
-    return state.rows && state.cols ? state.rows * state.cols : state.num_active_images;
+    return MAX(state.rows, 1) * MAX(state.cols, 1);
 }
 static inline int getRows() {
-    return state.rows ? state.rows : state.cols ? (state.num_active_images + state.cols -1 ) / state.cols : 1;
+    return MAX(state.rows, 1);
 }
 
 static inline int getCols() {
-    return state.cols ? state.cols : state.rows ? (state.num_active_images + state.rows - 1 ) / state.rows : state.num_active_images;
+    return MAX(state.cols, 1);
 }
 
 static inline const char* getFilePath(int index) {
