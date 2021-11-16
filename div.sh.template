@@ -1,13 +1,17 @@
 #!/bin/sh -e
 
 DIV_CONFIG_HOME=${XDG_CONFIG_DIR:-$HOME/.config}/div
-DIV_BIN_DIR=${DIV_BIN_DIR:-$HOME/.local/bin}
+DIV_BIN_DIR=${DIV_BIN_DIR:-$HOME/.local/share}/div
 DIV_BIN="$DIV_BIN_DIR/div"
 recompile() {
     mkdir -p "$DIV_CONFIG_HOME"
     mkdir -p "$DIV_BIN_DIR"
     cd "$DIV_CONFIG_HOME"
-    ${CC:-cc} -o "$DIV_BIN" ./*.c -ldiv __div_libs__
+    if [ -r Makefile ] || [ -r makefile ]; then
+        make LDLIBS="-ldiv __div_libs__" BIN="$DIV_BIN" DESTDIR="$DIV_BIN_DIR"
+    else
+        ${CC:-cc} -o "$DIV_BIN" ./*.c -ldiv __div_libs__
+    fi
 }
 if [ "$1" = "--recompile" ]; then
     recompile
