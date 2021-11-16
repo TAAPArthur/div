@@ -9,7 +9,7 @@ recompile() {
     cd "$DIV_CONFIG_HOME"
     ${CC:-cc} -o "$DIV_BIN" ./*.c -ldiv __div_libs__
 }
-if [ "$1" = "-r" ] || [ "$1" = "--recompile" ]; then
+if [ "$1" = "--recompile" ]; then
     recompile
 else
     [ -x "$DIV_BIN" ] || exec /usr/libexec/div "$@"
