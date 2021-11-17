@@ -60,6 +60,7 @@ typedef enum {
 } AlignMode;
 
 extern void (*events[])();
+extern void (*scaleFunc)(const char* buf, uint32_t original_width, uint32_t original_height, char* out_buf, uint32_t width, uint32_t height, int num_channels);
 const char** defaultSingleArgParse(const char **argv, bool* stop);
 void render();
 

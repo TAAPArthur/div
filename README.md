@@ -47,6 +47,3 @@ In line with the goal,
 4. Reloading image of disk change (ie via inotify)
 5. Loading args from the environment or config file
 6. Custom cli options
-
-## TODO
-1. Allow configuring the scaling method

@@ -220,20 +220,29 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
                 continue;
 
             float zoom = state.zoom ? state.zoom : 1;
-            effective_width = get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) ;
-            effective_height = get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1);
+            void * default_image_data = NULL;
+            if(!scaleFunc || (zoom == 1 && state.scale_mode == SCALE_NORMAL)) {
+                effective_width = holder[i].image_width;
+                effective_height = holder[i].image_height;
+                zoom = 1;
+                default_image_data = holder[i].raw;
+            } else {
+                effective_width = get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) ;
+                effective_height = get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1);
+            }
 
-            xcb_image_t *image = xcb_image_create_native(dis,effective_width*zoom ,effective_height*zoom ,XCB_IMAGE_FORMAT_Z_PIXMAP ,depth,NULL, 0,NULL);
+            xcb_image_t *image = xcb_image_create_native(dis,effective_width,effective_height,XCB_IMAGE_FORMAT_Z_PIXMAP ,depth,NULL, 0, default_image_data );
             if(!image)
                 return;
-
-            scale(holder[i].raw, holder[i].image_width, holder[i].image_height, effective_width*zoom , effective_height*zoom, image->stride, image->data, MIN(win_height, MIN(effective_height,  effective_height*zoom)));
+            if(scaleFunc)
+                scaleFunc(holder[i].raw, holder[i].image_width, holder[i].image_height, image->data, effective_width*zoom , effective_height*zoom, 4);
 
             if(zoom > 1 || effective_width > win_width || effective_height > win_height) {
                 xcb_image_t *sub_image = xcb_image_subimage(image,holder[i].offset_x, holder[i].offset_y, MIN(effective_width, win_width) ,MIN(effective_height, win_height),NULL,0,NULL);
                xcb_image_destroy(image);
                image = sub_image;
             }
+
             xcb_image_put(dis, wid, gc, image , x - (state.right_to_left? effective_width: 0), y, 0);
             xcb_image_destroy(image);
 

@@ -1,4 +1,4 @@
-LDLIBS += -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -limgloader
+LDLIBS += -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -limgloader -lm
 BIN=div
 LIB=lib$(BIN).a
 

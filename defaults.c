@@ -6,6 +6,7 @@
 #include <xcb/xcb.h>
 #include <stdio.h>
 #include "image.h"
+#include "image_view.h"
 
 State state = {
     .ignore_mask = Mod2Mask | LockMask,
@@ -16,6 +17,8 @@ State state = {
     .zoom = 1,
     .user_title = CLASSNAME,
 };
+
+void (*scaleFunc)(const char* buf, uint32_t original_width, uint32_t original_height, char* out_buf, uint32_t width, uint32_t height, int num_channels) = nearestNeighbourScale;
 
 void onStartup();
 

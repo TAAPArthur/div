@@ -62,29 +62,20 @@ uint32_t adjustAlignment(AlignMode mode, uint32_t used_value, uint32_t max_value
     }
 }
 
-/* scales imgbuf data to newbuf (ximg->data), nearest neighbour. */
-void scale(const char* const buf, uint16_t original_width, uint16_t original_height, unsigned int width, unsigned int height, unsigned int bytesperline, char *newbuf, int H)
-{
-    const unsigned char *ibuf;
-    unsigned int jdy, dx, bufx, x, y;
-    float a = 0.0f;
-    int c = 4;
-
-    jdy = bytesperline / c - width;
-    dx = (original_width << 10) / width;
-    for (y = 0; y < H; y++) {
-        bufx = original_width / width;
-        ibuf = &buf[y * original_height / height * original_width * c];
-
-        for (x = 0; x < width; x++) {
-
-            a = c==4?(ibuf[(bufx >> 10)*c+3]) / 255.0f:1;
-            *newbuf++ = (ibuf[(bufx >> 10)*c+0] * a);
-            *newbuf++ = (ibuf[(bufx >> 10)*c+1] * a);
-            *newbuf++ = (ibuf[(bufx >> 10)*c+2] * a);
-            newbuf++;
+void nearestNeighbourScale(const char* buf, uint32_t original_width, uint32_t original_height, char* out_buf, uint32_t width, uint32_t height, int num_channels) {
+    unsigned int bytesperline = width * num_channels;
+    unsigned int jdy = bytesperline / num_channels - width;
+    unsigned int dx = (original_width << 10) / width;
+    for (unsigned int y = 0; y < height; y++) {
+        unsigned int bufx = original_width / width;
+        const unsigned char *ibuf = &buf[y * original_height / height * original_width * num_channels ];
+        for (unsigned int x = 0; x < width; x++) {
+            *out_buf++ = ibuf[(bufx >> 10) * num_channels + 0];
+            *out_buf++ = ibuf[(bufx >> 10) * num_channels + 1];
+            *out_buf++ = ibuf[(bufx >> 10) * num_channels + 2];
+            out_buf++;
             bufx += dx;
         }
-        newbuf += jdy;
+        out_buf += jdy;
     }
 }
