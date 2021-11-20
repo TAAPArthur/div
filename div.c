@@ -56,7 +56,6 @@ void doEventLoop() {
         do
             maybe_render();
         while(processQueuedXEvents());
-        state.event_counter++;
         flush();
     }
 }
@@ -72,7 +71,7 @@ void maybe_render() {
     if(diff_num_images || memcmp(&last_state, &state, sizeof(State))) {
         RUN_EVENT(RENDER);
         RUN_EVENT(SET_TITLE);
-        last_state = last_state;
+        last_state = state;
     }
 }
 

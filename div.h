@@ -109,7 +109,6 @@ typedef struct State {
     uint32_t drawable;
     uint16_t win_width;
     uint16_t win_height;
-    uint16_t event_counter;
     bool dirty;
 
     void* image_context;
