@@ -8,8 +8,8 @@
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_keysyms.h>
 
-#include "image_view.h"
 #include "div.h"
+#include "image_view.h"
 #include "x.h"
 
 xcb_connection_t* dis;

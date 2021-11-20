@@ -1,12 +1,13 @@
-#include "div.h"
-#include "functions.h"
-#include "x.h"
 #include <X11/X.h>
 #include <X11/keysym.h>
-#include <xcb/xcb.h>
 #include <stdio.h>
+#include <xcb/xcb.h>
+
+#include "div.h"
+#include "functions.h"
 #include "image.h"
 #include "image_view.h"
+#include "x.h"
 
 State state = {
     .ignore_mask = Mod2Mask | LockMask,
@@ -42,8 +43,6 @@ void defaultOpenImages() {
         image_holders[i].image_height = getImageHeight(image_holders[i].image_data);
         image_holders[i].name = getImageName(image_holders[i].image_data);
         image_holders[i].raw = getRawImage(image_holders[i].image_data);
-
-
     }
     state.num_files = getImageNum(state.image_context);
 }

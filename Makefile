@@ -30,7 +30,8 @@ clean:
 arg_parse.c: arg_parse_gen.h
 
 arg_parse_gen.h: div.h
-	printf '#include <string.h>\n' > $@
+	printf '// Generated file do not modify\n' > $@
+	printf '#include <strings.h>\n\n#include "div.h"\n\n' >> $@
 	printf "int getFromEnumValue(const char* str) {\n" >> $@
 	sed -nE 's/^\s*((ALIGN|SCALE)_(([A-Z]*)?_?([A-Z]*))).*/    if(!strcasecmp("\3", str) || !strcasecmp(str, "\4") || !strcasecmp(str, "\5") || "\4"[0] == str[0] || "\5"[0] == str[0])return \1;/p' $^ >> $@
 	printf "\treturn 0;\n}" >> $@

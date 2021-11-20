@@ -1,5 +1,5 @@
-#include "div.h"
 #include "arg_parse_gen.h"
+#include "div.h"
 #define GET_ARG_STR argv[0][2] ? *argv +2 :*++argv
 #define GET_ARG strtol(GET_ARG_STR, NULL, 0);
 #define GET_ARG_F strtof(GET_ARG_STR, NULL);
