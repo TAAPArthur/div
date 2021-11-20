@@ -33,7 +33,7 @@ void defaultWindowTitle() {
 }
 
 void defaultOpenImages() {
-    for (int i = 0; i < getNumActiveImages(); i++) {
+    for (int i = 0; i < getNumActiveImages() && i < getImageNum(state.image_context); i++) {
         image_holders[i].image_data = openImage(state.image_context, state.file_index + i, image_holders[i].image_data);
         if(!image_holders[i].image_data) {
             image_holders[i].name = NULL;
