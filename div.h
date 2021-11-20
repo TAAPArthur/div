@@ -67,6 +67,12 @@ void render();
 void maybe_render();
 
 typedef struct {
+    short x;
+    short y;
+    uint16_t width;
+    uint16_t height;
+} Geometry;
+typedef struct {
     const char* name;
     uint32_t image_width;
     uint32_t image_height;
@@ -78,6 +84,7 @@ typedef struct {
     float zoom;
     uint16_t padding_x;
     uint16_t padding_y;
+    Geometry geometry;
 } ImageInfo;
 
 typedef struct State {

@@ -245,6 +245,7 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
 
             xcb_image_put(dis, wid, gc, image , x - (state.right_to_left? effective_width: 0), y, 0);
             xcb_image_destroy(image);
+            holder[i].geometry = (Geometry){x, y, effective_width, effective_height};
 
             x+=(effective_width + holder[i].padding_x) * (state.right_to_left?-1:1);
         }
