@@ -216,8 +216,11 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
     for (int r = 0, i = 0; r < getRows(); r++) {
         int x = state.right_to_left ? win_width - startingX : startingX;
         for (int c = 0; c < getCols() && i < num; c++, i++) {
-            if(!holder[i].image_data || !holder[i].raw)
-                continue;
+            if(!holder[i].image_data || !holder[i].raw) {
+                effective_width = dw;
+                effective_height = dh;
+                goto loop_end;
+            }
 
             float zoom = state.zoom ? state.zoom : 1;
             void * default_image_data = NULL;
@@ -245,6 +248,7 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
 
             xcb_image_put(dis, wid, gc, image , x - (state.right_to_left? effective_width: 0), y, 0);
             xcb_image_destroy(image);
+loop_end:
             holder[i].geometry = (Geometry){x, y, effective_width, effective_height};
 
             x+=(effective_width + holder[i].padding_x) * (state.right_to_left?-1:1);
