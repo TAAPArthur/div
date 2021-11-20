@@ -92,7 +92,7 @@ typedef struct State {
     const char** file_names;
     uint16_t num_files;
 
-    uint32_t file_index;
+    int file_index;
     uint32_t rows;
     uint32_t cols;
     ScaleMode scale_mode;
