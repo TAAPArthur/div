@@ -3,6 +3,7 @@ BIN=div
 LIB=lib$(BIN).a
 
 OBJS = arg_parse.o defaults.o  div.o  functions.o  image_view.o  x.o
+CFLAGS ?= -std=c99 -Wall -pedantic
 
 all: $(LIB) $(BIN) $(BIN).sh
 

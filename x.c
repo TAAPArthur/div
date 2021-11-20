@@ -90,7 +90,7 @@ uint32_t setupXConnection() {
     openXConnection();
     xcb_window_t wid = createWindow(dis, state.parent);
     state.wid = wid;
-    RUN_EVENT(PRE_MAP_WINDOW, wid);
+    RUN_EVENT_WITH_ARGS(PRE_MAP_WINDOW, wid);
     addNewEventFD(xcb_get_file_descriptor(dis), POLLIN, processXEvents);
     xcb_map_window(dis, wid); // TODO move later
     return wid;
@@ -235,7 +235,7 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
             if(!image)
                 return;
             if(scaleFunc)
-                scaleFunc(holder[i].raw, holder[i].image_width, holder[i].image_height, image->data, effective_width*zoom , effective_height*zoom, 4);
+                scaleFunc(holder[i].raw, holder[i].image_width, holder[i].image_height, (void*)image->data, effective_width*zoom , effective_height*zoom, 4);
 
             if(zoom > 1 || effective_width > win_width || effective_height > win_height) {
                 xcb_image_t *sub_image = xcb_image_subimage(image,holder[i].offset_x, holder[i].offset_y, MIN(effective_width, win_width) ,MIN(effective_height, win_height),NULL,0,NULL);

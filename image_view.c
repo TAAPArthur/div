@@ -68,7 +68,7 @@ void nearestNeighbourScale(const char* buf, uint32_t original_width, uint32_t or
     unsigned int dx = (original_width << 10) / width;
     for (unsigned int y = 0; y < height; y++) {
         unsigned int bufx = original_width / width;
-        const unsigned char *ibuf = &buf[y * original_height / height * original_width * num_channels ];
+        const char *ibuf = &buf[y * original_height / height * original_width * num_channels ];
         for (unsigned int x = 0; x < width; x++) {
             *out_buf++ = ibuf[(bufx >> 10) * num_channels + 0];
             *out_buf++ = ibuf[(bufx >> 10) * num_channels + 1];

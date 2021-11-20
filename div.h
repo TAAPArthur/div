@@ -15,7 +15,8 @@
 
 #define CLASSNAME "div"
 
-#define RUN_EVENT(X, ...) do {if(events[X])events[X](__VA_ARGS__);}while(0)
+#define RUN_EVENT(X) do {if(events[X])events[X]();}while(0)
+#define RUN_EVENT_WITH_ARGS(X, ...) do {if(events[X])events[X](__VA_ARGS__);}while(0)
 typedef struct {
     uint8_t  mod;
     uint32_t keysym;

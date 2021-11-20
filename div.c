@@ -1,4 +1,4 @@
-#include <sys/poll.h>
+#include <poll.h>
 #include <string.h>
 
 #include "div.h"
@@ -86,7 +86,7 @@ int main(int argc, const char **argv) {
     initial_args = argv;
     initial_num_args = argc;
     RUN_EVENT(ON_STARTUP);
-    RUN_EVENT(PROCESS_ARGS, argc, argv);
+    RUN_EVENT_WITH_ARGS(PROCESS_ARGS, argc, argv);
     setupXConnection();
     initlizeBindings();
     RUN_EVENT(POST_XCONNECTION);
