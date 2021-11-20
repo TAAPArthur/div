@@ -23,7 +23,7 @@ typedef struct {
     void (*func)();
     int arg;
     uint8_t keycode;
-    uint8_t type;
+    char type;
 } Binding;
 
 extern Binding bindings[];
