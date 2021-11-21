@@ -1,6 +1,13 @@
-LDLIBS += -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -limgloader -lm
+LDLIBS += -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -lm
 BIN=div
 LIB=lib$(BIN).a
+
+CUSTOM_IMAGE_LOADER ?= 0
+DISABLE_DEFAULT_IMAGE_LOADER_1 = -DCUSTOM_IMAGE_LOADER
+DEFAULT_IMAGE_LOADER_LIB_0 = -limgloader
+
+CFLAGS += $(DISABLE_DEFAULT_IMAGE_LOADER_$(CUSTOM_IMAGE_LOADER))
+LDLIBS += $(DEFAULT_IMAGE_LOADER_LIB_$(CUSTOM_IMAGE_LOADER))
 
 OBJS = arg_parse.o defaults.o  div.o  functions.o  image_view.o  x.o
 CFLAGS ?= -std=c99 -Wall -pedantic

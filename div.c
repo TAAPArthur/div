@@ -3,7 +3,6 @@
 
 #include "div.h"
 #include "functions.h"
-#include "image.h"
 #include "x.h"
 #include "image_view.h"
 const char** initial_args;

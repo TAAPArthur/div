@@ -5,9 +5,12 @@
 
 #include "div.h"
 #include "functions.h"
-#include "image.h"
 #include "image_view.h"
 #include "x.h"
+
+#ifndef CUSTOM_IMAGE_LOADER
+#include <img_loader/img_loader.h>
+#endif
 
 State state = {
     .ignore_mask = Mod2Mask | LockMask,
@@ -32,6 +35,7 @@ void defaultWindowTitle() {
     setWindowTitle(buffer);
 }
 
+#ifndef CUSTOM_IMAGE_LOADER
 void defaultOpenImages() {
     for (int i = 0; i < getNumActiveImages() && i < getImageNum(state.image_context); i++) {
         image_holders[i].image_data = openImage(state.image_context, state.file_index + i, image_holders[i].image_data);
@@ -46,6 +50,11 @@ void defaultOpenImages() {
     }
     state.num_files = getImageNum(state.image_context);
 }
+
+void createImageContext() {
+    state.image_context = createContext(state.file_names, state.num_files, REMOVE_INVALID );
+}
+#endif
 
 void defaultParseOptions(int argc, const char **argv) {
     bool stop = 0;
@@ -65,10 +74,6 @@ void defaultParseOptions(int argc, const char **argv) {
     }
 }
 
-void createImageContext() {
-    state.image_context = createContext(state.file_names, state.num_files, REMOVE_INVALID );
-}
-
 void (*events[LAST_EVENT])() = {
     [XCB_KEY_PRESS] = onKeyPress,
     [XCB_CONFIGURE_NOTIFY] = onConfigureEvent,
@@ -77,9 +82,11 @@ void (*events[LAST_EVENT])() = {
 
     [PROCESS_ARGS] = defaultParseOptions,
     [PRE_MAP_WINDOW] = setWindowProperties,
-    [POST_XCONNECTION] = createImageContext,
-    [RENDER] = render,
+#ifndef CUSTOM_IMAGE_LOADER
     [OPEN_IMAGES] = defaultOpenImages,
+    [POST_XCONNECTION] = createImageContext,
+#endif
+    [RENDER] = render,
     [SET_TITLE] = defaultWindowTitle,
 };
 

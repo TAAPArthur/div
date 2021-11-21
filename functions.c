@@ -1,6 +1,5 @@
 #include "div.h"
 #include "functions.h"
-#include "image.h"
 
 #define TOGGLE(A,B, D) A = (A==B ? D : B)
 
