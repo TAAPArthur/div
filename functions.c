@@ -55,6 +55,7 @@ void zoom(int delta) {
         state.zoom /= ZOOM_STEP;
     else
         state.zoom = 1;
+    state.zoom = MAX(1/64.0, MIN(state.zoom, 16));
 }
 
 void toggle_right_to_left(){

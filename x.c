@@ -196,16 +196,17 @@ int isXConnectionOpen() {
 void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uint32_t win_height) {
 	uint32_t dw, dh;
     uint32_t total_image_width = 0, total_image_height = 0;
+    float zoom = state.zoom ? state.zoom : 1;
 
     dw = (win_width - state.padding_x *2) / getCols();
     dh = (win_height- state.padding_y *2) / getRows();
 
     for (int i = 0; i < getCols() && i < num; i++) {
-        total_image_width += get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) + holder[i].padding_x;
+        total_image_width += zoom*get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) + holder[i].padding_x;
     }
 
     for (int i = 0; i < num; i+=getCols()) {
-        total_image_height += get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1) + holder[i].padding_y;
+        total_image_height += zoom*get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1) + holder[i].padding_y;
     }
 
     int startingX = state.padding_x + adjustAlignment(state.align_mode_x, total_image_width, win_width);
@@ -217,12 +218,11 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
         int x = state.right_to_left ? win_width - startingX : startingX;
         for (int c = 0; c < getCols() && i < num; c++, i++) {
             if(!holder[i].image_data || !holder[i].raw) {
-                effective_width = dw;
-                effective_height = dh;
+                effective_width = dw * zoom;
+                effective_height = dh * zoom;
                 goto loop_end;
             }
 
-            float zoom = state.zoom ? state.zoom : 1;
             void * default_image_data = NULL;
             if(!scaleFunc || (zoom == 1 && state.scale_mode == SCALE_NORMAL)) {
                 effective_width = holder[i].image_width;
@@ -230,15 +230,15 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
                 zoom = 1;
                 default_image_data = holder[i].raw;
             } else {
-                effective_width = get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) ;
-                effective_height = get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1);
+                effective_width = zoom * get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) ;
+                effective_height = zoom * get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1);
             }
 
             xcb_image_t *image = xcb_image_create_native(dis,effective_width,effective_height,XCB_IMAGE_FORMAT_Z_PIXMAP ,depth,NULL, 0, default_image_data );
             if(!image)
                 return;
             if(scaleFunc)
-                scaleFunc(holder[i].raw, holder[i].image_width, holder[i].image_height, (void*)image->data, effective_width*zoom , effective_height*zoom, 4);
+                scaleFunc(holder[i].raw, holder[i].image_width, holder[i].image_height, (void*)image->data, effective_width, effective_height, 4);
 
             if(zoom > 1 || effective_width > win_width || effective_height > win_height) {
                 xcb_image_t *sub_image = xcb_image_subimage(image,holder[i].offset_x, holder[i].offset_y, MIN(effective_width, win_width) ,MIN(effective_height, win_height),NULL,0,NULL);
