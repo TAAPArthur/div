@@ -51,3 +51,9 @@ In line with the goal,
 ## TODO
 * -h/-v cli options
 * Consider adding example configs
+* Be consistent with variable naming
+* Allow the backend to be easily replacing at compile time
+
+## FAQ
+### The image is distorted/ The image is distorted while zooming
+Change the scaling function. By default a really cheap, fast scaling function is used but it doesn't produce the best images. You can roll your own or use a 3rd party one. I recommend [stb_image_resize.h](https://github.com/nothings/stb/blob/master/stb_image_resize.h). Another option is to just disable zooming (state.zoom=1) and/or disable scaling (state.scale_mode=SCALE_NORMAL) which will just use the raw image.
