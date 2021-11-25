@@ -37,22 +37,22 @@ void defaultWindowTitle() {
 
 #ifndef CUSTOM_IMAGE_LOADER
 void defaultOpenImages() {
-    for (int i = 0; i < getNumActiveImages() && i < getImageNum(state.image_context); i++) {
-        image_holders[i].image_data = openImage(state.image_context, state.file_index + i, image_holders[i].image_data);
+    for (int i = 0; i < getNumActiveImages() && i < image_loader_get_num(state.image_context); i++) {
+        image_holders[i].image_data = image_loader_open(state.image_context, state.file_index + i, image_holders[i].image_data);
         if(!image_holders[i].image_data) {
             image_holders[i].name = NULL;
             continue;
         }
-        image_holders[i].image_width = getImageWidth(image_holders[i].image_data);
-        image_holders[i].image_height = getImageHeight(image_holders[i].image_data);
-        image_holders[i].name = getImageName(image_holders[i].image_data);
-        image_holders[i].raw = getRawImage(image_holders[i].image_data);
+        image_holders[i].image_width = image_loader_get_width(image_holders[i].image_data);
+        image_holders[i].image_height = image_loader_get_height(image_holders[i].image_data);
+        image_holders[i].name = image_loader_get_name(image_holders[i].image_data);
+        image_holders[i].raw = image_loader_get_data(image_holders[i].image_data);
     }
-    state.num_files = getImageNum(state.image_context);
+    state.num_files = image_loader_get_num(state.image_context);
 }
 
 void createImageContext() {
-    state.image_context = createContext(state.file_names, state.num_files, REMOVE_INVALID );
+    state.image_context = image_loader_create_context(state.file_names, state.num_files, IMAGE_LOADER_REMOVE_INVALID );
 }
 #endif
 
