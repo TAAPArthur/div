@@ -24,7 +24,7 @@ void jump_start() {
 }
 
 void jump_end() {
-    state.file_index = state.file_index - getNumActiveImages();
+    state.file_index = state.num_files - getNumActiveImages();
     open_images();
 }
 
