@@ -209,8 +209,8 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
         total_image_height += zoom*get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1) + holder[i].padding_y;
     }
 
-    int startingX = state.padding_x + adjustAlignment(state.align_mode_x, total_image_width, win_width);
-    int y = state.padding_y + adjustAlignment(state.align_mode_y, total_image_height, win_height);
+    int startingX = state.start_x + state.padding_x + adjustAlignment(state.align_mode_x, total_image_width, win_width);
+    int y = state.start_y + state.padding_y + adjustAlignment(state.align_mode_y, total_image_height, win_height);
 
     uint32_t effective_width;
     uint32_t effective_height;
@@ -233,6 +233,11 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
                 effective_width = zoom * get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) ;
                 effective_height = zoom * get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1);
             }
+            int xoffset = (state.start_x > 0 ? state.start_x :0) + holder[i].offset_x;
+            int yoffset = (state.start_y > 0 ? state.start_y :0) + holder[i].offset_y;
+            if(x - (long)(state.right_to_left? effective_width: 0) >  (long)win_width || y > (long)win_height || x +  (long)(!state.right_to_left? effective_width: 0)< 0 || y + (long) effective_height <0) {
+                goto loop_end;
+            }
 
             xcb_image_t *image = xcb_image_create_native(dis,effective_width,effective_height,XCB_IMAGE_FORMAT_Z_PIXMAP ,depth,NULL, 0, default_image_data );
             if(!image)
@@ -241,13 +246,16 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
                 scaleFunc(holder[i].raw, holder[i].image_width, holder[i].image_height, (void*)image->data, effective_width, effective_height, 4);
 
             if(zoom > 1 || effective_width > win_width || effective_height > win_height) {
-                xcb_image_t *sub_image = xcb_image_subimage(image,holder[i].offset_x, holder[i].offset_y, MIN(effective_width, win_width) ,MIN(effective_height, win_height),NULL,0,NULL);
+                xcb_image_t *sub_image = xcb_image_subimage(image, holder[i].offset_x, holder[i].offset_y, MIN(effective_width, win_width - MIN(state.start_x, 0) ), MIN(effective_height, win_height - MIN(state.start_y, 0) ), NULL, 0, NULL);
                xcb_image_destroy(image);
                image = sub_image;
             }
 
-            xcb_image_put(dis, wid, gc, image , x - (state.right_to_left? effective_width: 0), y, 0);
-            xcb_image_destroy(image);
+            if(image)
+                xcb_image_put(dis, wid, gc, image , x - (state.right_to_left? effective_width: 0), y, 0);
+destroy_image:
+            if(image)
+                xcb_image_destroy(image);
 loop_end:
             holder[i].geometry = (Geometry){x, y, effective_width, effective_height};
 

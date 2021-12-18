@@ -57,6 +57,18 @@ void zoom(int delta) {
     state.zoom = MAX(1/64.0, MIN(state.zoom, 16));
 }
 
+void reset_pan() {
+    state.start_x = state.start_y = 0;
+}
+
+void pan_x(int delta) {
+    state.start_x += delta;
+}
+
+void pan_y(int delta) {
+    state.start_y += delta;
+}
+
 void toggle_right_to_left(){
     state.right_to_left = !state.right_to_left;
 }

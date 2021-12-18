@@ -23,5 +23,8 @@ void jump_start() ;
 
 void jump_end() ;
 
-void zoom(int delta) ;
+void zoom(int delta);
+void pan_x(int delta);
+void pan_y(int delta);
+void reset_pan();
 #endif

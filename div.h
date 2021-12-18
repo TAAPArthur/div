@@ -108,6 +108,8 @@ typedef struct State {
     const char* name;
     const char* user_title;
 
+    int16_t start_x;
+    int16_t start_y;
     uint16_t padding_x;
     uint16_t padding_y;
 

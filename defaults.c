@@ -97,9 +97,17 @@ Binding bindings[] = {
     {ShiftMask, XK_F, cycleScaleMode, -1},
     {0, XK_semicolon, cycleAlignment, 1},
     {ShiftMask, XK_semicolon, cycleAlignment, -1},
+
     {0, XK_minus, zoom,        -1},
     {ShiftMask, XK_plus, zoom, +1},
     {0, XK_equal, zoom,        0},
+
+    {0, XK_Left, pan_x,        -32},
+    {0, XK_Right, pan_x,        32},
+    {0, XK_Up, pan_y,        32},
+    {0, XK_Down, pan_y,      -32},
+    {0, XK_0, reset_pan,      },
+
     {0, XK_d, toggle_column,        2},
     {0, XK_t, toggle_grid,        2},
     {ShiftMask, XK_T, toggle_grid,        4},
