@@ -1,8 +1,8 @@
 #ifndef DIV_X
 #define DIV_X
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 uint32_t setupXConnection();
 

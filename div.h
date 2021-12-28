@@ -1,9 +1,9 @@
 #ifndef DIV
 #define DIV
 
-#include <stdlib.h>
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 
 #define LEN(A) (sizeof(A)/sizeof(A[0]))
