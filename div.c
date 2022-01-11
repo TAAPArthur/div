@@ -46,17 +46,18 @@ int processEvents(int timeout) {
     return numEvents;
 }
 
-void doEventLoop() {
+int doEventLoop() {
     while(eventFDInfo.numberOfFDsToPoll) {
         processEvents(-1);
         if(!isXConnectionOpen())
-            continue;
+            return 4;
         RUN_EVENT(POST_EVENT);
         do
             maybe_render();
         while(processQueuedXEvents());
         flush();
     }
+    return 0;
 }
 
 void maybe_render() {
@@ -90,6 +91,5 @@ int main(int argc, const char **argv) {
     initlizeBindings();
     RUN_EVENT(POST_XCONNECTION);
     open_images();
-    doEventLoop();
-    return 0;
+    return doEventLoop();
 }
