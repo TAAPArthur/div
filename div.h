@@ -113,9 +113,11 @@ typedef struct State {
     uint16_t padding_x;
     uint16_t padding_y;
 
+    uint32_t root;
     uint32_t parent;
     uint32_t wid;
     uint32_t drawable;
+    uint32_t depth;
     uint16_t win_width;
     uint16_t win_height;
     bool dirty;

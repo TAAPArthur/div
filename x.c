@@ -31,18 +31,20 @@ xcb_atom_t get_atom(xcb_connection_t* dis, const char*name) {
     return atom;
 }
 
-int depth;
 xcb_window_t createWindow(xcb_connection_t* dis, xcb_window_t parent) {
     xcb_screen_iterator_t iter = xcb_setup_roots_iterator (xcb_get_setup (dis));
     xcb_screen_t* screen = iter.data;
 
+    state.root = screen->root;
+    state.depth = screen->root_depth;
+
     xcb_window_t win = xcb_generate_id(dis);
 
     xcb_window_t pid = xcb_generate_id (dis);
-    state.drawable =pid;
-    xcb_create_pixmap(dis, screen->root_depth, pid, screen->root, 5000, 5000);
+    state.drawable = pid;
+    xcb_create_pixmap(dis, screen->root_depth, pid, screen->root, GET(state.win_width, 200), GET(state.win_height, 200));
 
-    depth = screen->root_depth;
+
 
     gc = xcb_generate_id (dis);
 
@@ -176,8 +178,15 @@ void onKeyPress() {
 void onConfigureEvent() {
     xcb_configure_notify_event_t* configure_event = (xcb_configure_notify_event_t*)event;
     if (configure_event->window == state.wid) {
-        state.win_width = configure_event->width;
-        state.win_height = configure_event->height;
+        if( state.win_width != configure_event->width || state.win_height != configure_event->height) {
+            xcb_window_t pixmapId = xcb_generate_id (dis);
+            xcb_create_pixmap(dis, state.depth, pixmapId, state.root, configure_event->width, configure_event->height);
+            xcb_change_window_attributes(dis, state.wid, XCB_CW_BACK_PIXMAP, &pixmapId);
+            xcb_free_pixmap(dis, state.drawable);
+            state.drawable = pixmapId;
+            state.win_width = configure_event->width;
+            state.win_height = configure_event->height;
+        }
     }
 }
 
@@ -239,7 +248,7 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
                 goto loop_end;
             }
 
-            xcb_image_t *image = xcb_image_create_native(dis,effective_width,effective_height,XCB_IMAGE_FORMAT_Z_PIXMAP ,depth,NULL, 0, default_image_data );
+            xcb_image_t *image = xcb_image_create_native(dis,effective_width,effective_height,XCB_IMAGE_FORMAT_Z_PIXMAP ,state.depth,NULL, 0, default_image_data );
             if(!image)
                 return;
             if(scaleFunc)
