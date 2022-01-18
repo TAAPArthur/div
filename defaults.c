@@ -17,7 +17,7 @@ State state = {
     .xevent_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY,
     .default_binding_type = XCB_KEY_PRESS,
     .right_to_left = 0,
-    .scale_mode = SCALE_HEIGHT,
+    .scale_mode = SCALE_MIN,
     .zoom = 1,
     .user_title = CLASSNAME,
 };
