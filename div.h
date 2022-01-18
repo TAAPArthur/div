@@ -32,14 +32,17 @@ extern const char** initial_args;
 extern int initial_num_args;
 
 enum {
-    ON_STARTUP = 32,
-    PROCESS_ARGS,
-    PRE_MAP_WINDOW,
-    POST_XCONNECTION,
-    OPEN_IMAGES,
-    RENDER,
-    SET_TITLE,
-    POST_EVENT,
+    ON_STARTUP = 32,  /* Very first hook run */
+    PROCESS_ARGS,     /* Used to process command line args*/
+    IMG_INIT,         /* Used to setup an image context if needed */
+    PRE_MAP_WINDOW,   /* Called before the window is mapped */
+    POST_XCONNECTION, /* Called after the window has been mapped and bindings grabbed */
+
+    /* These hooks are triggered more than once */
+    OPEN_IMAGES,      /* Used to actually open the image and update image_holders */
+    RENDER,           /* Called to draw the image to the screen */
+    SET_TITLE,        /* Called to set the window title */
+    POST_EVENT,       /* Run after every batch of X events */
     LAST_EVENT
 };
 typedef enum {

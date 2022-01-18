@@ -51,10 +51,10 @@ int doEventLoop() {
         processEvents(-1);
         if(!isXConnectionOpen())
             return 4;
-        RUN_EVENT(POST_EVENT);
-        do
+        do {
+            RUN_EVENT(POST_EVENT);
             maybe_render();
-        while(processQueuedXEvents());
+        } while(processQueuedXEvents());
         flush();
     }
     return 0;
@@ -87,9 +87,11 @@ int main(int argc, const char **argv) {
     initial_num_args = argc;
     RUN_EVENT(ON_STARTUP);
     RUN_EVENT_WITH_ARGS(PROCESS_ARGS, argc, argv);
+    RUN_EVENT(IMG_INIT);
     setupXConnection();
     initlizeBindings();
     RUN_EVENT(POST_XCONNECTION);
     open_images();
+    flush();
     return doEventLoop();
 }

@@ -81,11 +81,11 @@ void (*events[LAST_EVENT])() = {
     [ON_STARTUP] = onStartup,
 
     [PROCESS_ARGS] = defaultParseOptions,
-    [PRE_MAP_WINDOW] = setWindowProperties,
 #ifndef CUSTOM_IMAGE_LOADER
+    [IMG_INIT] = createImageContext,
     [OPEN_IMAGES] = defaultOpenImages,
-    [POST_XCONNECTION] = createImageContext,
 #endif
+    [PRE_MAP_WINDOW] = setWindowProperties,
     [RENDER] = render,
     [SET_TITLE] = defaultWindowTitle,
 };
