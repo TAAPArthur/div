@@ -210,12 +210,23 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
     dw = (win_width - state.padding_x *2) / getCols();
     dh = (win_height- state.padding_y *2) / getRows();
 
+    uint32_t default_width = zoom * get_effective_dim(dw, dh, dw, dh, state.scale_mode, 0) ;
+    uint32_t default_height = zoom * get_effective_dim(dw, dh, dw, dh, state.scale_mode, 1);
+
     for (int i = 0; i < getCols() && i < num; i++) {
-        total_image_width += zoom*get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) + holder[i].padding_x;
+        total_image_width += holder[i].padding_x + (
+            (!holder[i].image_data || !holder[i].raw) ?
+            default_width :
+            zoom*get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0)
+        );
     }
 
     for (int i = 0; i < num; i+=getCols()) {
-        total_image_height += zoom*get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1) + holder[i].padding_y;
+        total_image_height +=holder[i].padding_y + (
+            (!holder[i].image_data || !holder[i].raw) ?
+            default_height :
+            zoom*get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1)
+        );
     }
 
     int startingX = state.start_x + state.padding_x + adjustAlignment(state.align_mode_x, total_image_width, win_width);
@@ -227,8 +238,8 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
         int x = state.right_to_left ? win_width - startingX : startingX;
         for (int c = 0; c < getCols() && i < num; c++, i++) {
             if(!holder[i].image_data || !holder[i].raw) {
-                effective_width = dw * zoom;
-                effective_height = dh * zoom;
+                effective_width = default_width;
+                effective_height = default_height;
                 goto loop_end;
             }
 
