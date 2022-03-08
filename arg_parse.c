@@ -13,7 +13,7 @@ const char** defaultSingleArgParse(const char **argv, bool* stop) {
         SET('c', state.cols, GET_ARG);
         SET('d', state.right_to_left, 1);
         SET('e', state.parent, GET_ARG);
-        SET('o', state.file_index, GET_ARG);
+        SET('n', state.file_index, GET_ARG);
         SET('r', state.rows, GET_ARG);
         SET('t', state.user_title, GET_ARG_STR);
         default:
