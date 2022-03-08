@@ -28,6 +28,8 @@ typedef struct {
 
 extern Binding bindings[];
 extern Binding user_bindings[];
+// used to display help text
+extern const char* arg_string;
 extern const char** initial_args;
 extern int initial_num_args;
 

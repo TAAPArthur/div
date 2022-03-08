@@ -49,10 +49,8 @@ In line with the goal,
 6. Custom cli options
 
 ## TODO
-* -h/-v cli options
 * Consider adding example configs
 * Be consistent with variable naming
-* Allow the backend to be easily replacing at compile time
 
 ## FAQ
 ### The image is distorted/ The image is distorted while zooming
