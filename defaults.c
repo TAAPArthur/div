@@ -20,6 +20,8 @@ State state = {
     .scale_mode = SCALE_MIN,
     .zoom = 1,
     .user_title = CLASSNAME,
+    .win_width = 200,
+    .win_height = 200,
 };
 
 void (*scaleFunc)(const char* buf, uint32_t original_width, uint32_t original_height, char* out_buf, uint32_t width, uint32_t height, int num_channels) = nearestNeighbourScale;

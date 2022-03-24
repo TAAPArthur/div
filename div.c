@@ -47,6 +47,8 @@ int processEvents(int timeout) {
 }
 
 int doEventLoop() {
+    flush();
+    processQueuedXEvents();
     while(eventFDInfo.numberOfFDsToPoll) {
         processEvents(-1);
         if(!isXConnectionOpen())
@@ -92,6 +94,5 @@ int main(int argc, const char **argv) {
     initlizeBindings();
     RUN_EVENT(POST_XCONNECTION);
     open_images();
-    flush();
     return doEventLoop();
 }

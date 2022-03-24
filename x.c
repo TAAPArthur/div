@@ -40,20 +40,15 @@ xcb_window_t createWindow(xcb_connection_t* dis, xcb_window_t parent) {
 
     xcb_window_t win = xcb_generate_id(dis);
 
-    xcb_window_t pid = xcb_generate_id (dis);
-    state.drawable = pid;
-    xcb_create_pixmap(dis, screen->root_depth, pid, screen->root, GET(state.win_width, 200), GET(state.win_height, 200));
-
-
-
     gc = xcb_generate_id (dis);
 
     uint32_t gc_values [] = {state.fg_color, state.bg_color};
     xcb_create_gc (dis, gc, screen->root, XCB_GC_FOREGROUND | XCB_GC_BACKGROUND , gc_values);
 
-    uint32_t values [] = {pid, state.xevent_mask};
-    xcb_create_window(dis, XCB_COPY_FROM_PARENT, win, parent? parent: screen->root, 0, 0, GET(state.win_width, 200), GET(state.win_height, 200), 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
- screen->root_visual, XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK, &values);
+    uint32_t values [] = {state.xevent_mask};
+    xcb_create_window(dis, XCB_COPY_FROM_PARENT, win, parent? parent: screen->root,
+            0, 0, state.win_width, state.win_height, 0,
+            XCB_WINDOW_CLASS_INPUT_OUTPUT, screen->root_visual, XCB_CW_EVENT_MASK, &values);
     return win;
 }
 
@@ -178,14 +173,16 @@ void onKeyPress() {
 void onConfigureEvent() {
     xcb_configure_notify_event_t* configure_event = (xcb_configure_notify_event_t*)event;
     if (configure_event->window == state.wid) {
-        if( state.win_width != configure_event->width || state.win_height != configure_event->height) {
+        if( !state.drawable || state.win_width != configure_event->width || state.win_height != configure_event->height) {
             xcb_window_t pixmapId = xcb_generate_id (dis);
             xcb_create_pixmap(dis, state.depth, pixmapId, state.root, configure_event->width, configure_event->height);
             xcb_change_window_attributes(dis, state.wid, XCB_CW_BACK_PIXMAP, &pixmapId);
-            xcb_free_pixmap(dis, state.drawable);
+            if(state.drawable)
+                xcb_free_pixmap(dis, state.drawable);
             state.drawable = pixmapId;
             state.win_width = configure_event->width;
             state.win_height = configure_event->height;
+            state.dirty = 1;
         }
     }
 }
