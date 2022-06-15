@@ -10,15 +10,15 @@ int initial_num_args;
 ImageInfo image_holders[MAX_IMAGES];
 
 struct {
-    struct pollfd pollFDs[255];
-    void(*extraEventCallBacks[255])();
+    struct pollfd pollFDs[MAX_FDS];
+    void(*extraEventCallBacks[MAX_FDS])();
     int numberOfFDsToPoll;
 } eventFDInfo;
 
-int addNewEventFD(int fd, short events, void (*callback)()) {
+void addNewEventFD(int fd, short events, void (*callback)()) {
     eventFDInfo.pollFDs[eventFDInfo.numberOfFDsToPoll] = (struct pollfd) {fd, events};
     eventFDInfo.extraEventCallBacks[eventFDInfo.numberOfFDsToPoll] = callback;
-    return eventFDInfo.numberOfFDsToPoll++;
+    eventFDInfo.numberOfFDsToPoll++;
 }
 
 void removeExtraEvent(int index) {
@@ -27,6 +27,15 @@ void removeExtraEvent(int index) {
         eventFDInfo.extraEventCallBacks[i - 1] = eventFDInfo.extraEventCallBacks[i];
     }
     eventFDInfo.numberOfFDsToPoll--;
+}
+
+void removeExtraEventByFD(int fd) {
+    for(int i = 0; i < eventFDInfo.numberOfFDsToPoll; i++) {
+        if(fd == eventFDInfo.pollFDs[i].fd) {
+            removeExtraEvent(i);
+            break;
+        }
+    }
 }
 
 int processEvents(int timeout) {
@@ -46,6 +55,21 @@ int processEvents(int timeout) {
     return numEvents;
 }
 
+void maybe_render() {
+    static State last_state;
+    static uint32_t last_num_active_images;
+    bool diff_num_images = getNumActiveImages() != last_num_active_images;
+    if(diff_num_images) {
+        open_images();
+        last_num_active_images= getNumActiveImages();
+    }
+    if(diff_num_images || memcmp(&last_state, &state, sizeof(State))) {
+        RUN_EVENT(RENDER);
+        RUN_EVENT(SET_TITLE);
+        last_state = state;
+    }
+}
+
 int doEventLoop() {
     flush();
     processQueuedXEvents();
@@ -60,21 +84,6 @@ int doEventLoop() {
         flush();
     }
     return 0;
-}
-
-void maybe_render() {
-    static State last_state;
-    static uint32_t last_num_active_images;
-    bool diff_num_images = getNumActiveImages() != last_num_active_images;
-    if(diff_num_images) {
-        open_images();
-        last_num_active_images= getNumActiveImages();
-    }
-    if(diff_num_images || memcmp(&last_state, &state, sizeof(State))) {
-        RUN_EVENT(RENDER);
-        RUN_EVENT(SET_TITLE);
-        last_state = state;
-    }
 }
 
 void render() {

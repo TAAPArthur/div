@@ -35,18 +35,18 @@ In line with the goal,
 2. Grid view: see RC images in a RxC grid (which is a generalization of a dual page view)
 3. View images left-to-right or right-to-left
 4. Zooming and (basic) scaling
-5. Under 1000 lines of code. Only other image I'm aware of that is comparable is [lel](https://git.codemadness.org/lel/files.html) and [meh](https://github.com/jhawthorn/meh) both of which are far less customizable.
-6. Modular design would make it easy to swap out X11/imlib backends
-7. Ability to load from zip files, directories, pipes and urls thanks to the flexible backend
-8. Can react to any arbitrary X events
+5. Panning across images
+6. Under 1000 lines of code. Only other image I'm aware of that is comparable is [lel](https://git.codemadness.org/lel/files.html) and [meh](https://github.com/jhawthorn/meh) both of which are far less customizable.
+7. Modular design would make it easy to swap out X11/imlib backends
+8. Ability to load from zip files, directories, pipes and urls thanks to the flexible backend
+9. Can react to any arbitrary X events
 
 ## Things (trivially) possible from config file
-1. Panning across images
-2. Mouse bindings and key release
-3. Spawning external commands
-4. Reloading image of disk change (ie via inotify)
-5. Loading args from the environment or config file
-6. Custom cli options
+1. Mouse bindings and key release
+2. Spawning external commands
+3. Reloading image of disk change (ie via inotify)
+4. Loading args from the environment or config file
+5. Custom cli options
 
 ## TODO
 * Consider adding example configs

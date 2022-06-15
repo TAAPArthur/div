@@ -11,6 +11,7 @@
 #define MAX(A,B) (A>B?A:B)
 #define MAX_FILE_NAMES 255
 #define MAX_IMAGES 16
+#define MAX_FDS 8
 #define GET(V, DEFAULT) (V?V:DEFAULT)
 
 #define CLASSNAME "div"
@@ -26,10 +27,14 @@ typedef struct {
     char type;
 } Binding;
 
+// The default bindings
 extern Binding bindings[];
+// User specified bindings that override the defaults in case of conflicts
 extern Binding user_bindings[];
 // used to display help text
 extern const char* arg_string;
+
+// points to the original arguments passed into main; Useful if one wanted to restart
 extern const char** initial_args;
 extern int initial_num_args;
 
@@ -64,12 +69,17 @@ typedef enum {
     LAST_ALIGN_MODE
 } AlignMode;
 
+// An array of function pointers of size LAST_EVENT
 extern void (*events[])();
+// Used to scale an image up/down
 extern void (*scaleFunc)(const char* buf, uint32_t original_width, uint32_t original_height, char* out_buf, uint32_t width, uint32_t height, int num_channels);
 const char** defaultSingleArgParse(const char **argv, bool* stop);
+// The default render function that just draws to the screen
 void render();
 
-void maybe_render();
+// Default function used to load images. It should use the global state to know which image indexes to load
+// and update image_holders and possibly state.num_files
+void defaultOpenImages();
 
 typedef struct {
     short x;
@@ -141,11 +151,15 @@ typedef struct State {
 } State;
 
 
-int addNewEventFD(int fd, short events, void (*callback)());
-void removeExtraEvent(int index);
+// Add a new FD to listen to. Everytime this fd has some event (specified by events), callback is called
+void addNewEventFD(int fd, short events, void (*callback)());
+// Removes an existing fd
+void removeExtraEventByFd(int fd);
 
 
+// An array of size MAX_IMAGES that holds info about the loaded images
 extern ImageInfo image_holders[];
+// Holds all global state
 extern State state;
 
 static inline int getNumActiveImages() {
