@@ -290,14 +290,26 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
             if(!image)
                 goto loop_end;
 
+            int32_t offsets[2] = {x - (state.right_to_left? effective_width: 0), y};
             if(zoom > 1 || effective_width > win_width || effective_height > win_height) {
-                xcb_image_t *sub_image = xcb_image_subimage(image, holder[i].offset_x, holder[i].offset_y, MIN(effective_width, win_width - MIN(state.start_x, 0) ), MIN(effective_height, win_height - MIN(state.start_y, 0) ), NULL, 0, NULL);
+                int32_t img_off[2] = {holder[i].offset_x, holder[i].offset_y};
+                for(int i = 0 ; i < 2; i++) {
+                    if(offsets[i] < 0) {
+                        img_off[i] -= offsets[i];
+                        offsets[i] = 0;
+                    }
+                }
+                xcb_image_t *sub_image = xcb_image_subimage(image, img_off[0], img_off[1],
+                        MIN(win_width, effective_width - img_off[0]),
+                        MIN(win_height, effective_height - img_off[1]),
+                        NULL, 0, NULL);
+
                xcb_image_destroy(image);
                image = sub_image;
             }
 
             if(image) {
-                xcb_image_put(dis, wid, gc, image , x - (state.right_to_left? effective_width: 0), y, 0);
+                xcb_image_put(dis, wid, gc, image, offsets[0], offsets[1], 0);
                 xcb_image_destroy(image);
             }
 loop_end:
