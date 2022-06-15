@@ -182,7 +182,6 @@ void onConfigureEvent() {
             state.drawable = pixmapId;
             state.win_width = configure_event->width;
             state.win_height = configure_event->height;
-            state.dirty = 1;
         }
     }
 }

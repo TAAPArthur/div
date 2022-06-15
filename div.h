@@ -134,7 +134,6 @@ typedef struct State {
     uint32_t depth;
     uint16_t win_width;
     uint16_t win_height;
-    bool dirty;
 
     uint16_t render_count;
 
