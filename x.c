@@ -199,6 +199,38 @@ int isXConnectionOpen() {
     return !!dis;
 }
 
+void* get_cached_image(ImageInfo*holder, CacheInfo* currentCacheInfo) {
+    if(holder->scaled_cached_image_data && memcmp(&holder->cache_info, currentCacheInfo, sizeof(CacheInfo)) == 0) {
+        return holder->scaled_cached_image_data;
+    } else {
+        if (holder->scaled_cached_image_data) {
+            free(holder->scaled_cached_image_data);
+            holder->scaled_cached_image_data = NULL;
+        }
+        return NULL;
+    }
+
+}
+
+void* get_scaled_image(ImageInfo*holder, uint32_t effective_width, uint32_t effective_height) {
+    CacheInfo currentCacheInfo = { state.render_count, effective_width, effective_height};
+    void* img = get_cached_image(holder, &currentCacheInfo);
+    if(img) {
+        return img;
+    }
+
+    if(!scaleFunc || (holder->image_width == effective_width && effective_height == holder->image_height)) {
+        return holder->raw;
+    }
+
+    holder->scaled_cached_image_data = malloc(effective_width * effective_height * sizeof(uint32_t) * 4);
+    holder->cache_info = currentCacheInfo;
+
+    if(scaleFunc)
+        scaleFunc(holder->raw, holder->image_width, holder->image_height, holder->scaled_cached_image_data, effective_width, effective_height, 4);
+    return holder->scaled_cached_image_data;
+}
+
 void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uint32_t win_height) {
 	uint32_t dw, dh;
     uint32_t total_image_width = 0, total_image_height = 0;
@@ -240,12 +272,10 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
                 goto loop_end;
             }
 
-            void * default_image_data = NULL;
             if(!scaleFunc || (zoom == 1 && state.scale_mode == SCALE_NORMAL)) {
                 effective_width = holder[i].image_width;
                 effective_height = holder[i].image_height;
                 zoom = 1;
-                default_image_data = holder[i].raw;
             } else {
                 effective_width = zoom * get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 0) ;
                 effective_height = zoom * get_effective_dim(holder[i].image_width, holder[i].image_height, dw, dh, state.scale_mode, 1);
@@ -256,11 +286,10 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
                 goto loop_end;
             }
 
-            xcb_image_t *image = xcb_image_create_native(dis,effective_width,effective_height,XCB_IMAGE_FORMAT_Z_PIXMAP ,state.depth,NULL, 0, default_image_data );
+            void * default_image_data = get_scaled_image(&holder[i], effective_width, effective_height);
+            xcb_image_t *image = xcb_image_create_native(dis, effective_width, effective_height, XCB_IMAGE_FORMAT_Z_PIXMAP, state.depth, NULL, 0, default_image_data);
             if(!image)
-                return;
-            if(scaleFunc)
-                scaleFunc(holder[i].raw, holder[i].image_width, holder[i].image_height, (void*)image->data, effective_width, effective_height, 4);
+                goto loop_end;
 
             if(zoom > 1 || effective_width > win_width || effective_height > win_height) {
                 xcb_image_t *sub_image = xcb_image_subimage(image, holder[i].offset_x, holder[i].offset_y, MIN(effective_width, win_width - MIN(state.start_x, 0) ), MIN(effective_height, win_height - MIN(state.start_y, 0) ), NULL, 0, NULL);
@@ -268,11 +297,10 @@ void img_render(ImageInfo*holder, int num, uint32_t wid, uint32_t win_width, uin
                image = sub_image;
             }
 
-            if(image)
+            if(image) {
                 xcb_image_put(dis, wid, gc, image , x - (state.right_to_left? effective_width: 0), y, 0);
-destroy_image:
-            if(image)
                 xcb_image_destroy(image);
+            }
 loop_end:
             holder[i].geometry = (Geometry){x, y, effective_width, effective_height};
 

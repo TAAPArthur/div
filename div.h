@@ -77,12 +77,21 @@ typedef struct {
     uint16_t width;
     uint16_t height;
 } Geometry;
+
+typedef struct {
+    uint32_t render_count;
+    uint16_t width;
+    uint16_t height;
+} CacheInfo;
+
 typedef struct {
     const char* name;
     uint32_t image_width;
     uint32_t image_height;
     void* image_data;
     void* raw;
+    void* scaled_cached_image_data;
+    CacheInfo cache_info;
 
     int16_t offset_x;
     int16_t offset_y;
@@ -126,6 +135,8 @@ typedef struct State {
     uint16_t win_width;
     uint16_t win_height;
     bool dirty;
+
+    uint16_t render_count;
 
     void* image_context;
 } State;

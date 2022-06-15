@@ -4,6 +4,7 @@
 #define TOGGLE(A,B, D) A = (A==B ? D : B)
 
 void open_images() {
+    state.render_count++;
     RUN_EVENT(OPEN_IMAGES);
 }
 
