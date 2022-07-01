@@ -9,7 +9,7 @@ make install
 
 The following are the dependant libs
 ` -lxcb -lxcb-keysyms -lxcb-icccm -lxcb-image -limgloader`
-Note that [libimageloader](https://github.com/TAAPArthur/libimageloader) is just a wrapper around other image loaders.
+Note that [libimageloader](https://codeberg.org/TAAPArthur/libimageloader) is just a wrapper around other image loaders and can be replaced easily if desired.
 
 ## Configuration
 1. Create ~/.config/dim/config.c
@@ -21,7 +21,7 @@ user_bindings will be used to for any custom bindings you may want. These will b
 onStartup will be called on startup and can be used to do whatever you want.
 
 ## Goal
-This project was born from frustrations with the development of [nxiv](https://github.com/nxiv/nxiv). The goal of this project is to have a simple, minimal image viewer that can easily be extended to any arbitrary usecase. So minimalism and extensibility are the main points of focus.
+This project was born from frustrations with the development of [nxiv](https://codeberg.org/nxiv/nxiv). The goal of this project is to have a simple, minimal image viewer that can easily be extended to any arbitrary usecase. So minimalism and extensibility are the main points of focus.
 
 ## Contributing
 In line with the goal,
