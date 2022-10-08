@@ -9,7 +9,10 @@ void open_images() {
 }
 
 void next_image(int arg) {
-    if(state.file_index + arg < state.num_files && state.file_index + arg + getNumActiveImages() > 0) {
+    if(state.wrap) {
+        state.file_index = (state.num_files + (state.file_index + arg) % state.num_files) % state.num_files;
+        open_images();
+    } else if(state.file_index + arg < state.num_files && state.file_index + arg + getNumActiveImages() > 0) {
         state.file_index += arg;
         open_images();
     }

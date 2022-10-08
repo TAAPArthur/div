@@ -10,7 +10,7 @@
 #define VERSION ".9"
 #endif
 
-const char* arg_string = "SXYZcdehnrtv";
+const char* arg_string = "SXYZcdehnrtvw";
 const char** defaultSingleArgParse(const char **argv, bool* stop) {
     switch(argv[0][1]) {
         SET('S', state.scale_mode, getFromEnumValue(GET_ARG_STR));
@@ -23,6 +23,7 @@ const char** defaultSingleArgParse(const char **argv, bool* stop) {
         SET('n', state.file_index, GET_ARG);
         SET('r', state.rows, GET_ARG);
         SET('t', state.user_title, GET_ARG_STR);
+        SET('w', state.wrap, 1);
         case 'h':
             printf("div: usage [-%s]\n", arg_string);
             exit(0);

@@ -123,6 +123,7 @@ typedef struct State {
     AlignMode align_mode_y;
     float zoom;
     bool right_to_left;
+    bool wrap;
 
     uint16_t ignore_mask;
     uint32_t xevent_mask;
