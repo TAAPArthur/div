@@ -62,10 +62,10 @@ void setWindowHints(xcb_connection_t* dis, xcb_window_t win) {
 void setWindowClass(xcb_connection_t* dis, xcb_window_t win) {
     const char* instance_name = GET(state.name, CLASSNAME);
     const char* class_name =  CLASSNAME;
-    char class_instance[strlen(class_name) + strlen(instance_name) + 2];
-    strcpy(class_instance, instance_name);
-    strcpy(class_instance + strlen(instance_name) + 1, class_name);
-    xcb_icccm_set_wm_class(dis, win, LEN(class_instance), class_instance);
+    char instance_class[strlen(instance_name) + strlen(class_name) + 2];
+    strcpy(instance_class, instance_name);
+    strcpy(instance_class + strlen(instance_name) + 1, class_name);
+    xcb_icccm_set_wm_class(dis, win, LEN(instance_class), instance_class);
 }
 
 void openXConnection() {
