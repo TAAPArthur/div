@@ -19,6 +19,7 @@ void next_image(int arg) {
 }
 
 void next_page(int arg) {
+    reset_pan();
     next_image(arg * getNumActiveImages());
 }
 
