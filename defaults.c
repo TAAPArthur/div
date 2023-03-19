@@ -104,8 +104,8 @@ Binding bindings[] = {
     {ShiftMask, XK_plus, zoom, +1},
     {0, XK_equal, zoom,         0},
 
-    {0, XK_Left, pan_x,         32},
-    {0, XK_Right, pan_x,       -32},
+    {0, XK_Left, pan_x,        -32},
+    {0, XK_Right, pan_x,        32},
     {0, XK_Up, pan_y,           32},
     {0, XK_Down, pan_y,        -32},
     {0, XK_0, reset_pan,          },
