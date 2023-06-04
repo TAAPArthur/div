@@ -112,7 +112,7 @@ typedef struct {
 } ImageInfo;
 
 typedef struct State {
-    const char** file_names;
+    const char** original_file_names;
     uint16_t num_files;
 
     int file_index;
@@ -172,10 +172,6 @@ static inline int getRows() {
 
 static inline int getCols() {
     return MAX(state.cols, 1);
-}
-
-static inline const char* getFilePath(int index) {
-    return index < 0 || index >= state.num_files ? NULL : state.file_names[index];
 }
 
 #endif

@@ -54,7 +54,7 @@ void defaultOpenImages() {
 }
 
 void createImageContext() {
-    state.image_context = image_loader_create_context(state.file_names, state.num_files, IMAGE_LOADER_REMOVE_INVALID );
+    state.image_context = image_loader_create_context(state.original_file_names, state.num_files, IMAGE_LOADER_REMOVE_INVALID );
 }
 #endif
 
@@ -72,7 +72,7 @@ void defaultParseOptions(int argc, const char **argv) {
             break;
     }
     if(argv[0]) {
-        state.file_names = argv;
+        state.original_file_names = argv;
     }
 }
 
