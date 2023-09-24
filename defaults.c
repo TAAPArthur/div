@@ -117,6 +117,8 @@ Binding bindings[] = {
     {0, XK_g, jump_start,              },
     {ShiftMask, XK_G, jump_end,        },
 
+    {0, XK_b, invertBackground,        },
+
     {0, XK_J, next_page,             +1},
     {0, XK_K, next_page,             -1},
     {ShiftMask, XK_j, next_image,    +1},

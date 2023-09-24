@@ -17,6 +17,10 @@ void onConfigureEvent();
 
 void setWindowTitle(const char* str);
 
+void changeBackground(uint32_t color);
+
+void invertBackground();
+
 
 void closeXConnection();
 int isXConnectionOpen();

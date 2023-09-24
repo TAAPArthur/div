@@ -41,15 +41,27 @@ xcb_window_t createWindow(xcb_connection_t* dis, xcb_window_t parent) {
     xcb_window_t win = xcb_generate_id(dis);
 
     gc = xcb_generate_id (dis);
+    if (!state.color) {
+        state.color = screen->black_pixel;
+    }
 
-    uint32_t gc_values [] = {state.fg_color, state.bg_color};
-    xcb_create_gc (dis, gc, screen->root, XCB_GC_FOREGROUND | XCB_GC_BACKGROUND , gc_values);
+    uint32_t gc_values [] = {state.color};
+    xcb_create_gc (dis, gc, screen->root, XCB_GC_FOREGROUND, gc_values);
 
     uint32_t values [] = {state.xevent_mask};
     xcb_create_window(dis, XCB_COPY_FROM_PARENT, win, parent? parent: screen->root,
             0, 0, state.win_width, state.win_height, 0,
             XCB_WINDOW_CLASS_INPUT_OUTPUT, screen->root_visual, XCB_CW_EVENT_MASK, &values);
     return win;
+}
+
+void changeBackground(uint32_t color) {
+    state.color = color;
+    xcb_change_gc(dis, gc, XCB_GC_FOREGROUND, &color);
+}
+
+void invertBackground() {
+    changeBackground(~state.color);
 }
 
 void setWindowHints(xcb_connection_t* dis, xcb_window_t win) {

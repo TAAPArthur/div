@@ -128,8 +128,7 @@ typedef struct State {
     uint16_t ignore_mask;
     uint32_t xevent_mask;
     uint32_t default_binding_type;
-    uint32_t bg_color;
-    uint32_t fg_color;
+    uint32_t color;
     const char* name;
     const char* user_title;
 
